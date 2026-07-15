@@ -22,25 +22,64 @@ and complexity:
 The canonical playbook and role contracts live in
 [`skills/orca-fleet/`](skills/orca-fleet/).
 
-### OpenCode
+## Supported harnesses
 
-The repository includes project-local OpenCode integration:
+Metis includes project-local skill and worker definitions for Codex, Claude
+Code, and OpenCode:
 
-- `.opencode/agents/orca-fleet.md` defines the primary orchestrator.
-- Four `orca-fleet-*` subagents implement the worker roles.
-- `.opencode/skills/orca-fleet/SKILL.md` exposes the canonical playbook.
-- `.opencode/commands/orca-fleet.md` provides `/orca-fleet <objective>`.
+| Harness | Skill entry | Worker definitions | Invoke |
+|---|---|---|---|
+| Codex | `.agents/skills/orca-fleet/SKILL.md` | `.codex/agents/*.toml` | `$orca-fleet <objective>` |
+| Claude Code | `.claude/skills/orca-fleet/SKILL.md` | `.claude/agents/*.md` | `/orca-fleet <objective>` |
+| OpenCode | `.agents/skills/orca-fleet/SKILL.md` | `.opencode/agents/*.md` | `/orca-fleet <objective>` |
 
-OpenCode agent definitions intentionally omit concrete models. Subagents inherit
-the invoking primary agent's model unless a local `provider/model-id` override is
-added. This keeps the checked-in workflow portable while allowing economical
-models for routine work and stronger models for hard execution or evaluation.
+Codex and Claude Code use the current main session as the orchestrator. OpenCode
+also provides `.opencode/agents/orca-fleet.md` as a native primary agent. All
+three harnesses expose the same four namespaced worker roles.
 
-Run an objective from the OpenCode TUI with:
+### Use Orca Fleet in this repository
 
-```text
-/orca-fleet <objective>
+Start the selected harness from the Metis repository root. Its project-local
+configuration is discovered automatically. Invoke the skill explicitly with the
+syntax in the table above and include the engineering objective after the skill
+name.
+
+If a harness was already running when its configuration directory was first
+created, restart the session so it discovers the new skill and agents.
+
+### Install into another repository
+
+Use the installer from a Metis checkout. It copies the canonical playbook and
+the selected project-local adapter without modifying unrelated configuration:
+
+```bash
+./scripts/install-orca-fleet.sh \
+  --target /path/to/target-repository \
+  --harness all
 ```
+
+Use `codex`, `claude`, or `opencode` instead of `all` to install one adapter.
+The target directory must already exist. Existing destination files are never
+overwritten unless `--force` is supplied:
+
+```bash
+./scripts/install-orca-fleet.sh \
+  --target /path/to/target-repository \
+  --harness claude \
+  --force
+```
+
+The installer is intentionally project-local. Commit the installed directories
+to the target repository when the fleet should be shared with the team. Keep
+`skills/orca-fleet/` alongside the harness-specific directories because each
+skill entry points to that canonical playbook.
+
+### Model selection
+
+Shared definitions do not pin concrete models. Workers inherit the active model
+unless a local override is added. Configure economical models for Explorer and
+General Executor when appropriate, and orchestrator-level models for Hard
+Executor and Evaluator.
 
 Long-running compute should run as a detached process with compact terminal
 reporting; an agent should never remain active solely to poll it.

@@ -5,12 +5,12 @@ description: >-
   multi-agent engineering work. Use whenever coordinating sub-agents,
   decomposing work by complexity, dispatching research or implementation,
   running an independent adversarial review, monitoring background compute, or
-  integrating worker results, including through OpenCode agent definitions.
-  Defines the orchestrator's responsibilities, Explorer, General Executor, Hard
-  Executor, and Evaluator roles, bounded handoffs, verification rules, and
-  cost-safe monitoring practices. Consult before delegating, launching
-  unattended work, or leaving work running overnight. See AGENTS.md for the
-  complete role contracts.
+  integrating worker results, including through Codex, Claude Code, or OpenCode
+  agent definitions. Defines the orchestrator's responsibilities, Explorer,
+  General Executor, Hard Executor, and Evaluator roles, bounded handoffs,
+  verification rules, and cost-safe monitoring practices. Consult before
+  delegating, launching unattended work, or leaving work running overnight. See
+  AGENTS.md for the complete role contracts.
 ---
 
 # orca-fleet — model-neutral orchestration
@@ -19,20 +19,22 @@ Use one durable orchestrator to own the outcome. Treat concrete models, CLIs,
 and agent harnesses as replaceable execution channels. Select them by the
 capability required for a role, not by a hard-coded provider or model name.
 
-## OpenCode integration
+## Harness integration
 
-Use the project-local definitions in `.opencode/agents/`: `orca-fleet` is the
-primary orchestrator and the four `orca-fleet-*` files are its subagents. The
-primary agent's `permission.task` allowlist restricts automatic dispatch to
-those roles. OpenCode derives each agent's name from its filename. Invoke the
-primary agent directly or run `/orca-fleet <objective>` through the project-local
-command bridge in `.opencode/commands/orca-fleet.md`.
+Use the canonical playbook in this directory with the project-local adapters:
 
-Leave `model` unset for a portable default; OpenCode subagents then inherit the
-invoking primary agent's model. To enforce different capability or cost tiers,
-run `opencode models` and add an available `provider/model-id` to each agent's
-frontmatter. Prefer economical models for Explorer and General Executor and
-orchestrator-level models for Hard Executor and Evaluator.
+- **Codex:** Load `.agents/skills/orca-fleet/SKILL.md` and dispatch the four
+  `.codex/agents/orca-fleet-*.toml` workers from the main task.
+- **Claude Code:** Run `/orca-fleet <objective>` through
+  `.claude/skills/orca-fleet/SKILL.md` and dispatch the four
+  `.claude/agents/orca-fleet-*.md` workers from the main session.
+- **OpenCode:** Use `.opencode/agents/orca-fleet.md` as the primary orchestrator
+  or run `/orca-fleet <objective>` through the project-local command bridge.
+
+Keep models inherited for a portable default. Add harness-local model and
+reasoning overrides only when the available catalog and desired cost/capability
+tiers are known. Prefer economical configurations for Explorer and General
+Executor and orchestrator-level configurations for Hard Executor and Evaluator.
 
 ## Core invariant
 

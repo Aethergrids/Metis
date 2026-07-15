@@ -136,28 +136,30 @@ change when doing so would lose context consistency.
 > Hard Executors implement at the appropriate complexity; Evaluators challenge
 > the result; detached processes perform long-running compute.
 
-## 9. OpenCode adapter
+## 9. Harness adapters
 
-Map these role contracts to the project-local OpenCode definitions:
+Map the role contracts to the project-local definitions:
 
-| Role | Definition |
-|---|---|
-| Orchestrator | `.opencode/agents/orca-fleet.md` (`mode: primary`) |
-| Explorer | `.opencode/agents/orca-fleet-explorer.md` |
-| General Executor | `.opencode/agents/orca-fleet-general-executor.md` |
-| Hard Executor | `.opencode/agents/orca-fleet-hard-executor.md` |
-| Evaluator | `.opencode/agents/orca-fleet-evaluator.md` |
+| Role | Codex | Claude Code | OpenCode |
+|---|---|---|---|
+| Orchestrator | Main task + `$orca-fleet` | Main session + `/orca-fleet` | `.opencode/agents/orca-fleet.md` |
+| Explorer | `.codex/agents/orca-fleet-explorer.toml` | `.claude/agents/orca-fleet-explorer.md` | `.opencode/agents/orca-fleet-explorer.md` |
+| General Executor | `.codex/agents/orca-fleet-general-executor.toml` | `.claude/agents/orca-fleet-general-executor.md` | `.opencode/agents/orca-fleet-general-executor.md` |
+| Hard Executor | `.codex/agents/orca-fleet-hard-executor.toml` | `.claude/agents/orca-fleet-hard-executor.md` | `.opencode/agents/orca-fleet-hard-executor.md` |
+| Evaluator | `.codex/agents/orca-fleet-evaluator.toml` | `.claude/agents/orca-fleet-evaluator.md` | `.opencode/agents/orca-fleet-evaluator.md` |
 
-The primary agent's `permission.task` allowlist exposes only these four worker
-types. Explorer and Evaluator deny edits by default; every worker denies nested
-task dispatch so orchestration remains with the primary agent.
+Preserve the single-orchestrator topology in every adapter. Codex workers state
+that they must not delegate, Claude workers deny the `Agent` tool, and OpenCode
+workers deny the `task` permission. Explorer and Evaluator are read-only by
+default on all three harnesses.
 
-Keep concrete models out of the shared definitions. OpenCode subagents inherit
-the invoking primary agent's model when `model` is absent. Add local model
-overrides only when the available provider catalog and desired cost/capability
-tiers are known.
+Keep concrete models out of shared definitions. Workers inherit the active
+model unless the user adds a harness-local override. Use economical capability
+tiers for Explorer and General Executor where appropriate and
+orchestrator-level tiers for Hard Executor and Evaluator.
 
-Use `.opencode/skills/orca-fleet/SKILL.md` as the OpenCode discovery entry point
-and `.opencode/commands/orca-fleet.md` as the `/orca-fleet <objective>` command
-bridge. Keep `skills/orca-fleet/SKILL.md` authoritative so the playbook has one
-maintained source of truth.
+Keep `skills/orca-fleet/SKILL.md` authoritative. Codex and OpenCode share the
+Agent Skills entry under `.agents/skills/`; Claude Code uses the entry under
+`.claude/skills/`. Use `scripts/install-orca-fleet.sh` to copy the canonical
+files and one or all adapters into another project without overwriting existing
+files by default.
