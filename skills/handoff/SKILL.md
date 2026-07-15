@@ -132,8 +132,9 @@ Always create and verify the document before opening a destination.
 
 - For a **fresh task**, send a concise prompt that points to the document, names
   the next focus, asks the agent to verify ground truth, and tells it to invoke
-  the suggested skills. Confirm the destination can read the temporary path; if
-  it cannot, send the redacted handoff body through the supported prompt or
+  the suggested skills. If the destination is remote, containerized, or otherwise
+  lacks access to the local temporary directory, or if access cannot be confirmed,
+  send the redacted handoff body directly through the supported prompt or
   attachment channel. Do not paste the prior transcript.
 - For a **fork**, create the fork only after the document exists. Forks may copy
   completed history but omit the active handoff turn, so send the destination a
