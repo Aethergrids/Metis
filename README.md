@@ -12,9 +12,14 @@ explicitly requested background sub-agent. It is useful for assigning a
 lightweight bounded task without forwarding a noisy transcript while keeping
 integration and verification with the source agent.
 
-The canonical workflow lives in `skills/handoff/`. Its Agent Skills entry is
-`.agents/skills/handoff/SKILL.md`; in Codex, invoke it as
-`$handoff <next focus or bounded assignment>`.
+The canonical workflow lives in `skills/handoff/`. Each supported coding agent
+has a project-local entry point:
+
+| Harness | Entry point | Invoke |
+|---|---|---|
+| Codex | `.agents/skills/handoff/SKILL.md` | `$handoff <focus or assignment>` |
+| Claude Code | `.claude/skills/handoff/SKILL.md` | `/handoff <focus or assignment>` |
+| OpenCode | `.agents/skills/handoff/SKILL.md` and `.opencode/commands/handoff.md` | `/handoff <focus or assignment>` |
 
 ## Orca Fleet
 
@@ -58,32 +63,37 @@ name.
 If a harness was already running when its configuration directory was first
 created, restart the session so it discovers the new skill and agents.
 
-### Install into another repository
+### Install everything for every coding agent
 
-Use the installer from a Metis checkout. It copies the canonical playbook and
-the selected project-local adapter without modifying unrelated configuration:
-
-```bash
-./scripts/install-orca-fleet.sh \
-  --target /path/to/target-repository \
-  --harness all
-```
-
-Use `codex`, `claude`, or `opencode` instead of `all` to install one adapter.
-The target directory must already exist. Existing destination files are never
-overwritten unless `--force` is supplied:
+Use the general installer from a Metis checkout. By default it installs both
+`handoff` and `orca-fleet` for Codex, Claude Code, and OpenCode:
 
 ```bash
-./scripts/install-orca-fleet.sh \
-  --target /path/to/target-repository \
-  --harness claude \
-  --force
+./scripts/install-metis.sh --target /path/to/target-repository
 ```
+
+This is equivalent to passing `--skill all --harness all`. Filter the install
+when only one skill or coding agent is needed:
+
+```bash
+./scripts/install-metis.sh \
+  --target /path/to/target-repository \
+  --skill handoff \
+  --harness claude
+```
+
+Valid skill selectors are `all`, `handoff`, and `orca-fleet`. Valid harness
+selectors are `all`, `codex`, `claude`, and `opencode`. The target directory
+must already exist. Existing destination files are never overwritten unless
+`--force` is supplied.
+
+The previous `install-orca-fleet.sh` command remains available as an Orca-only
+compatibility wrapper.
 
 The installer is intentionally project-local. Commit the installed directories
-to the target repository when the fleet should be shared with the team. Keep
-`skills/orca-fleet/` alongside the harness-specific directories because each
-skill entry points to that canonical playbook.
+to the target repository when the skills should be shared with the team. Keep
+the canonical `skills/` files alongside the harness-specific entries because
+the entries point back to those workflows.
 
 ### Model selection
 

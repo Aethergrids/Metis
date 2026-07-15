@@ -160,6 +160,6 @@ orchestrator-level tiers for Hard Executor and Evaluator.
 
 Keep `skills/orca-fleet/SKILL.md` authoritative. Codex and OpenCode share the
 Agent Skills entry under `.agents/skills/`; Claude Code uses the entry under
-`.claude/skills/`. Use `scripts/install-orca-fleet.sh` to copy the canonical
-files and one or all adapters into another project without overwriting existing
-files by default.
+`.claude/skills/`. Use `scripts/install-metis.sh --skill orca-fleet` to copy the
+canonical files and one or all adapters into another project without
+overwriting existing files by default.
