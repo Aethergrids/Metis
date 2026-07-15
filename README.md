@@ -5,6 +5,17 @@
 Metis provides reusable orchestration utilities for coordinating coding agents
 without coupling the workflow to a specific model provider or harness.
 
+## Handoff
+
+`handoff` creates a compact, artifact-first transfer for a fresh task, fork, or
+explicitly requested background sub-agent. It is useful for assigning a
+lightweight bounded task without forwarding a noisy transcript while keeping
+integration and verification with the source agent.
+
+The canonical workflow lives in `skills/handoff/`. Its Agent Skills entry is
+`.agents/skills/handoff/SKILL.md`; in Codex, invoke it as
+`$handoff <next focus or bounded assignment>`.
+
 ## Orca Fleet
 
 `orca-fleet` is a model-neutral orchestration skill for multi-step engineering

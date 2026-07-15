@@ -4,9 +4,9 @@ description: >-
   Create a compact, artifact-first transfer of the current task for another
   agent or a fresh task. Use when explicitly asked to prepare a handoff,
   continue in a fresh context, branch with a fork, or delegate the next bounded
-  phase. Capture verified state, decisions, next actions, and suggested skills;
-  redact sensitive data; and write a portable Markdown fallback to the OS
-  temporary directory.
+  phase, including a lightweight background assignment. Capture verified state,
+  decisions, next actions, and suggested skills; redact sensitive data; and
+  write a portable Markdown fallback to the OS temporary directory.
 ---
 
 # Handoff
@@ -31,8 +31,9 @@ Use the narrowest mode the user requested:
 - **Fork:** Use a native fork control when the user wants an alternate branch
   that retains the source history. A fork copies history, so it does not by
   itself reclaim context.
-- **Sub-agent:** Use only for explicitly requested, bounded delegation. Send the
-  handoff plus a concrete deliverable and stop condition, not the transcript.
+- **Background sub-agent:** Use only for explicitly requested, bounded
+  delegation, especially a lightweight background assignment. Send the handoff
+  plus a concrete deliverable and stop condition, not the transcript.
 - **Same task:** When the user wants more room without transferring ownership,
   use or recommend the surface's native compaction control. Keep the handoff
   document as a recovery point when useful.
@@ -140,9 +141,9 @@ Always create and verify the document before opening a destination.
   completed history but omit the active handoff turn, so send the destination a
   follow-up containing the handoff path and next focus. State that the fork
   preserves history and is not a context reset.
-- For a **sub-agent**, provide one bounded objective, allowed scope, acceptance
-  checks, output contract, stop condition, and the handoff path. Keep the source
-  agent responsible for integrating and verifying the result.
+- For a **background sub-agent**, provide one bounded objective, allowed scope,
+  acceptance checks, output contract, stop condition, and the handoff path. Keep
+  the source agent responsible for integrating and verifying the result.
 - For a **portable-only handoff**, return the verified path and a one-sentence
   description of the intended next focus.
 
