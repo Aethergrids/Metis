@@ -4,7 +4,11 @@ set -eu
 
 usage() {
   cat <<'EOF'
-Usage: install-metis.sh --target PATH [--skill all|orca-fleet|handoff] [--harness all|codex|claude|opencode] [--force]
+Usage: install-metis.sh --target PATH [--skill NAME] [--harness NAME] [--force]
+
+Skills: all, craft-agent-prompt, design-tool-workflow, handoff,
+        manage-long-workflow, orca-fleet, run-long-job
+Harnesses: all, codex, claude, opencode
 
 Install Metis skills as project-local configuration in another repository.
 By default, install every skill for every supported coding-agent harness.
@@ -54,7 +58,7 @@ done
 [ -d "$target" ] || { printf 'Target directory does not exist: %s\n' "$target" >&2; exit 2; }
 
 case "$skill" in
-  all|orca-fleet|handoff) ;;
+  all|craft-agent-prompt|design-tool-workflow|handoff|manage-long-workflow|orca-fleet|run-long-job) ;;
   *)
     printf 'Unsupported skill: %s\n' "$skill" >&2
     usage >&2
@@ -86,6 +90,31 @@ skills/handoff/SKILL.md
 skills/handoff/agents/openai.yaml"
 fi
 
+if [ "$skill" = "all" ] || [ "$skill" = "run-long-job" ]; then
+  files="$files
+skills/run-long-job/SKILL.md
+skills/run-long-job/agents/openai.yaml
+skills/run-long-job/scripts/long_job.py"
+fi
+
+if [ "$skill" = "all" ] || [ "$skill" = "craft-agent-prompt" ]; then
+  files="$files
+skills/craft-agent-prompt/SKILL.md
+skills/craft-agent-prompt/agents/openai.yaml"
+fi
+
+if [ "$skill" = "all" ] || [ "$skill" = "design-tool-workflow" ]; then
+  files="$files
+skills/design-tool-workflow/SKILL.md
+skills/design-tool-workflow/agents/openai.yaml"
+fi
+
+if [ "$skill" = "all" ] || [ "$skill" = "manage-long-workflow" ]; then
+  files="$files
+skills/manage-long-workflow/SKILL.md
+skills/manage-long-workflow/agents/openai.yaml"
+fi
+
 if [ "$harness" = "all" ] || [ "$harness" = "codex" ] || [ "$harness" = "opencode" ]; then
   if [ "$skill" = "all" ] || [ "$skill" = "orca-fleet" ]; then
     files="$files
@@ -94,6 +123,22 @@ if [ "$harness" = "all" ] || [ "$harness" = "codex" ] || [ "$harness" = "opencod
   if [ "$skill" = "all" ] || [ "$skill" = "handoff" ]; then
     files="$files
 .agents/skills/handoff/SKILL.md"
+  fi
+  if [ "$skill" = "all" ] || [ "$skill" = "run-long-job" ]; then
+    files="$files
+.agents/skills/run-long-job/SKILL.md"
+  fi
+  if [ "$skill" = "all" ] || [ "$skill" = "craft-agent-prompt" ]; then
+    files="$files
+.agents/skills/craft-agent-prompt/SKILL.md"
+  fi
+  if [ "$skill" = "all" ] || [ "$skill" = "design-tool-workflow" ]; then
+    files="$files
+.agents/skills/design-tool-workflow/SKILL.md"
+  fi
+  if [ "$skill" = "all" ] || [ "$skill" = "manage-long-workflow" ]; then
+    files="$files
+.agents/skills/manage-long-workflow/SKILL.md"
   fi
 fi
 
@@ -118,6 +163,22 @@ if [ "$harness" = "all" ] || [ "$harness" = "claude" ]; then
     files="$files
 .claude/skills/handoff/SKILL.md"
   fi
+  if [ "$skill" = "all" ] || [ "$skill" = "run-long-job" ]; then
+    files="$files
+.claude/skills/run-long-job/SKILL.md"
+  fi
+  if [ "$skill" = "all" ] || [ "$skill" = "craft-agent-prompt" ]; then
+    files="$files
+.claude/skills/craft-agent-prompt/SKILL.md"
+  fi
+  if [ "$skill" = "all" ] || [ "$skill" = "design-tool-workflow" ]; then
+    files="$files
+.claude/skills/design-tool-workflow/SKILL.md"
+  fi
+  if [ "$skill" = "all" ] || [ "$skill" = "manage-long-workflow" ]; then
+    files="$files
+.claude/skills/manage-long-workflow/SKILL.md"
+  fi
 fi
 
 if { [ "$harness" = "all" ] || [ "$harness" = "opencode" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "orca-fleet" ]; }; then
@@ -133,6 +194,26 @@ fi
 if { [ "$harness" = "all" ] || [ "$harness" = "opencode" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "handoff" ]; }; then
   files="$files
 .opencode/commands/handoff.md"
+fi
+
+if { [ "$harness" = "all" ] || [ "$harness" = "opencode" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "run-long-job" ]; }; then
+  files="$files
+.opencode/commands/run-long-job.md"
+fi
+
+if { [ "$harness" = "all" ] || [ "$harness" = "opencode" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "craft-agent-prompt" ]; }; then
+  files="$files
+.opencode/commands/craft-agent-prompt.md"
+fi
+
+if { [ "$harness" = "all" ] || [ "$harness" = "opencode" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "design-tool-workflow" ]; }; then
+  files="$files
+.opencode/commands/design-tool-workflow.md"
+fi
+
+if { [ "$harness" = "all" ] || [ "$harness" = "opencode" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "manage-long-workflow" ]; }; then
+  files="$files
+.opencode/commands/manage-long-workflow.md"
 fi
 
 if [ "$force" -eq 0 ]; then

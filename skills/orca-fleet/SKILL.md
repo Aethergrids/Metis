@@ -146,11 +146,10 @@ a detached process, record its PID, write logs to disk, emit a terminal marker,
 and use a shell or harness monitor that wakes the orchestrator once on terminal
 state or stall.
 
-```bash
-setsid nohup sh -c '<command>; code=$?; echo "EXIT=$code" >> run.log' \
-  > run.log 2>&1 &
-echo $! > run.pid
-```
+When `run-long-job` is available, invoke it and follow
+`skills/run-long-job/SKILL.md` instead of constructing a detached launcher in
+the agent loop. It records reproducibility metadata and provides compact status
+and terminal-state commands.
 
 Keep monitoring output small: report only terminal state, the last relevant
 error, and a compact progress summary. Do not stream full logs into an agent's

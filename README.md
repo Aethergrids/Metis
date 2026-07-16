@@ -21,6 +21,37 @@ has a project-local entry point:
 | Claude Code | `.claude/skills/handoff/SKILL.md` | `/handoff <focus or assignment>` |
 | OpenCode | `.agents/skills/handoff/SKILL.md` and `.opencode/commands/handoff.md` | `/handoff <focus or assignment>` |
 
+## Run Long Job
+
+`run-long-job` launches training, backfills, migrations, materializations,
+benchmarks, large builds, and other long local commands as detached processes.
+It records the command, working directory, Git SHA, PIDs, log path, compact
+status, and a one-line terminal sentinel without keeping an agent alive to poll.
+
+| Harness | Entry point | Invoke |
+|---|---|---|
+| Codex | `.agents/skills/run-long-job/SKILL.md` | `$run-long-job <command or objective>` |
+| Claude Code | `.claude/skills/run-long-job/SKILL.md` | `/run-long-job <command or objective>` |
+| OpenCode | `.agents/skills/run-long-job/SKILL.md` and `.opencode/commands/run-long-job.md` | `/run-long-job <command or objective>` |
+
+## Prompt and Workflow Design
+
+Three focused skills apply OpenAI's current
+[GPT-5.6 Sol prompting guidance](https://developers.openai.com/api/docs/guides/prompt-guidance-gpt-5p6)
+without loading one large generic prompt playbook:
+
+| Skill | Use |
+|---|---|
+| `craft-agent-prompt` | Create, simplify, evaluate, or migrate agent prompt contracts. |
+| `design-tool-workflow` | Define tools, routing, retrieval budgets, programmatic reductions, evidence, retries, and stop rules. |
+| `manage-long-workflow` | Run single-agent work across phases or context windows with sparse updates and deliberate state. |
+
+Invoke them as `$craft-agent-prompt`, `$design-tool-workflow`, and
+`$manage-long-workflow` in Codex, or use the corresponding slash commands in
+Claude Code and OpenCode. `manage-long-workflow` routes detached local compute
+to `run-long-job`, multi-agent work to `orca-fleet`, and context reset to
+`handoff` rather than duplicating those workflows.
+
 ## Orca Fleet
 
 `orca-fleet` is a model-neutral orchestration skill for multi-step engineering
@@ -65,8 +96,8 @@ created, restart the session so it discovers the new skill and agents.
 
 ### Install everything for every coding agent
 
-Use the general installer from a Metis checkout. By default it installs both
-`handoff` and `orca-fleet` for Codex, Claude Code, and OpenCode:
+Use the general installer from a Metis checkout. By default it installs every
+Metis skill for Codex, Claude Code, and OpenCode:
 
 ```bash
 ./scripts/install-metis.sh --target /path/to/target-repository
@@ -82,10 +113,11 @@ when only one skill or coding agent is needed:
   --harness claude
 ```
 
-Valid skill selectors are `all`, `handoff`, and `orca-fleet`. Valid harness
-selectors are `all`, `codex`, `claude`, and `opencode`. The target directory
-must already exist. Existing destination files are never overwritten unless
-`--force` is supplied.
+Valid skill selectors are `all`, `craft-agent-prompt`, `design-tool-workflow`,
+`handoff`, `manage-long-workflow`, `orca-fleet`, and `run-long-job`. Valid
+harness selectors are `all`, `codex`, `claude`, and `opencode`. The target
+directory must already exist. Existing destination files are never overwritten
+unless `--force` is supplied.
 
 The previous `install-orca-fleet.sh` command remains available as an Orca-only
 compatibility wrapper.
@@ -102,5 +134,5 @@ unless a local override is added. Configure economical models for Explorer and
 General Executor when appropriate, and orchestrator-level models for Hard
 Executor and Evaluator.
 
-Long-running compute should run as a detached process with compact terminal
-reporting; an agent should never remain active solely to poll it.
+Use `run-long-job` for long-running compute. An agent should never remain active
+solely to poll a process.

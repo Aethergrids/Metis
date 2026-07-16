@@ -1,0 +1,4 @@
+interface:
+  display_name: "Craft Agent Prompt"
+  short_description: "Create lean, testable agent prompt contracts"
+  default_prompt: "Use $craft-agent-prompt to audit and simplify this agent prompt against GPT-5.6 guidance."
