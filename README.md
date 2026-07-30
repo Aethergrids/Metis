@@ -5,6 +5,22 @@
 Metis provides reusable orchestration utilities for coordinating coding agents
 without coupling the workflow to a specific model provider or harness.
 
+## Repository layout
+
+Repository sources are split by responsibility:
+
+```text
+skills/<skill>/                 canonical skill instructions and resources
+agents/codex/agents/            Codex worker definitions
+agents/claude/agents/           Claude Code worker definitions
+agents/opencode/agents/         OpenCode primary and worker definitions
+agents/opencode/commands/       OpenCode command definitions
+```
+
+Skills exist only under `skills/`. The installer copies those canonical sources
+and the selected provider definitions into the hidden discovery paths required
+by a target harness; generated discovery directories are not tracked here.
+
 ## Handoff
 
 `handoff` creates a compact, artifact-first transfer for a fresh task, fork, or
@@ -12,10 +28,10 @@ explicitly requested background sub-agent. It is useful for assigning a
 lightweight bounded task without forwarding a noisy transcript while keeping
 integration and verification with the source agent.
 
-The canonical workflow lives in `skills/handoff/`. Each supported coding agent
-has a project-local entry point:
+The canonical workflow lives in `skills/handoff/`. After installation, each
+supported coding agent has a project-local entry point:
 
-| Harness | Entry point | Invoke |
+| Harness | Installed entry point | Invoke |
 |---|---|---|
 | Codex | `.agents/skills/handoff/SKILL.md` | `$handoff <focus or assignment>` |
 | Claude Code | `.claude/skills/handoff/SKILL.md` | `/handoff <focus or assignment>` |
@@ -28,7 +44,7 @@ benchmarks, large builds, and other long local commands as detached processes.
 It records the command, working directory, Git SHA, PIDs, log path, compact
 status, and a one-line terminal sentinel without keeping an agent alive to poll.
 
-| Harness | Entry point | Invoke |
+| Harness | Installed entry point | Invoke |
 |---|---|---|
 | Codex | `.agents/skills/run-long-job/SKILL.md` | `$run-long-job <command or objective>` |
 | Claude Code | `.claude/skills/run-long-job/SKILL.md` | `/run-long-job <command or objective>` |
@@ -71,25 +87,31 @@ The canonical playbook and role contracts live in
 
 ## Supported harnesses
 
-Metis includes project-local skill and worker definitions for Codex, Claude
-Code, and OpenCode:
+Metis keeps provider-native definitions under dedicated source directories:
 
-| Harness | Skill entry | Worker definitions | Invoke |
+| Harness | Definition source | Installed worker path | Invoke |
 |---|---|---|---|
-| Codex | `.agents/skills/orca-fleet/SKILL.md` | `.codex/agents/*.toml` | `$orca-fleet <objective>` |
-| Claude Code | `.claude/skills/orca-fleet/SKILL.md` | `.claude/agents/*.md` | `/orca-fleet <objective>` |
-| OpenCode | `.agents/skills/orca-fleet/SKILL.md` | `.opencode/agents/*.md` | `/orca-fleet <objective>` |
+| Codex | `agents/codex/agents/*.toml` | `.codex/agents/*.toml` | `$orca-fleet <objective>` |
+| Claude Code | `agents/claude/agents/*.md` | `.claude/agents/*.md` | `/orca-fleet <objective>` |
+| OpenCode | `agents/opencode/{agents,commands}/*.md` | `.opencode/{agents,commands}/*.md` | `/orca-fleet <objective>` |
 
 Codex and Claude Code use the current main session as the orchestrator. OpenCode
-also provides `.opencode/agents/orca-fleet.md` as a native primary agent. All
-three harnesses expose the same four namespaced worker roles.
+also provides `agents/opencode/agents/orca-fleet.md` as a native primary-agent
+source. All three harnesses expose the same four namespaced worker roles.
 
 ### Use Orca Fleet in this repository
 
-Start the selected harness from the Metis repository root. Its project-local
-configuration is discovered automatically. Invoke the skill explicitly with the
-syntax in the table above and include the engineering objective after the skill
-name.
+The source checkout deliberately does not track generated harness directories.
+Install the desired local configuration into the checkout, then start the
+harness from the repository root:
+
+```bash
+./scripts/install-metis.sh --target . --harness codex
+```
+
+Replace `codex` with `claude` or `opencode` as needed. The generated hidden
+directories are ignored by Git. Invoke the skill with the syntax in the table
+above and include the engineering objective after the skill name.
 
 If a harness was already running when its configuration directory was first
 created, restart the session so it discovers the new skill and agents.
@@ -122,10 +144,11 @@ unless `--force` is supplied.
 The previous `install-orca-fleet.sh` command remains available as an Orca-only
 compatibility wrapper.
 
-The installer is intentionally project-local. Commit the installed directories
-to the target repository when the skills should be shared with the team. Keep
-the canonical `skills/` files alongside the harness-specific entries because
-the entries point back to those workflows.
+The installer is intentionally project-local. It copies each canonical skill
+directly into the selected harness's discovery directory and maps definitions
+from `agents/<provider>/` into that provider's hidden configuration directory.
+Commit installed output in a downstream repository only when its team wants to
+share generated harness configuration.
 
 ### Model selection
 

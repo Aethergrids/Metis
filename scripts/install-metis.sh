@@ -10,8 +10,9 @@ Skills: all, craft-agent-prompt, design-tool-workflow, handoff,
         manage-long-workflow, orca-fleet, run-long-job
 Harnesses: all, codex, claude, opencode
 
-Install Metis skills as project-local configuration in another repository.
-By default, install every skill for every supported coding-agent harness.
+Install Metis skills and provider adapters as project-local configuration.
+Canonical skills are copied from skills/ into each harness's discovery path;
+provider definitions are copied from agents/ into the matching harness path.
 Existing destination files are preserved unless --force is supplied.
 EOF
 }
@@ -78,150 +79,106 @@ esac
 source_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 files=""
 
-if [ "$skill" = "all" ] || [ "$skill" = "orca-fleet" ]; then
+add_file() {
   files="$files
-skills/orca-fleet/SKILL.md
-skills/orca-fleet/AGENTS.md"
+$1|$2"
+}
+
+add_skill_files() {
+  skill_name=$1
+  shift
+
+  for skill_file do
+    source_file="skills/$skill_name/$skill_file"
+
+    case "$harness" in
+      all|codex|opencode)
+        add_file "$source_file" ".agents/skills/$skill_name/$skill_file"
+        ;;
+    esac
+
+    case "$harness" in
+      all|claude)
+        add_file "$source_file" ".claude/skills/$skill_name/$skill_file"
+        ;;
+    esac
+  done
+}
+
+if [ "$skill" = "all" ] || [ "$skill" = "orca-fleet" ]; then
+  add_skill_files orca-fleet SKILL.md AGENTS.md
 fi
 
 if [ "$skill" = "all" ] || [ "$skill" = "handoff" ]; then
-  files="$files
-skills/handoff/SKILL.md
-skills/handoff/agents/openai.yaml"
+  add_skill_files handoff SKILL.md agents/openai.yaml
 fi
 
 if [ "$skill" = "all" ] || [ "$skill" = "run-long-job" ]; then
-  files="$files
-skills/run-long-job/SKILL.md
-skills/run-long-job/agents/openai.yaml
-skills/run-long-job/scripts/long_job.py"
+  add_skill_files run-long-job SKILL.md agents/openai.yaml scripts/long_job.py
 fi
 
 if [ "$skill" = "all" ] || [ "$skill" = "craft-agent-prompt" ]; then
-  files="$files
-skills/craft-agent-prompt/SKILL.md
-skills/craft-agent-prompt/agents/openai.yaml"
+  add_skill_files craft-agent-prompt SKILL.md agents/openai.yaml
 fi
 
 if [ "$skill" = "all" ] || [ "$skill" = "design-tool-workflow" ]; then
-  files="$files
-skills/design-tool-workflow/SKILL.md
-skills/design-tool-workflow/agents/openai.yaml"
+  add_skill_files design-tool-workflow SKILL.md agents/openai.yaml
 fi
 
 if [ "$skill" = "all" ] || [ "$skill" = "manage-long-workflow" ]; then
-  files="$files
-skills/manage-long-workflow/SKILL.md
-skills/manage-long-workflow/agents/openai.yaml"
-fi
-
-if [ "$harness" = "all" ] || [ "$harness" = "codex" ] || [ "$harness" = "opencode" ]; then
-  if [ "$skill" = "all" ] || [ "$skill" = "orca-fleet" ]; then
-    files="$files
-.agents/skills/orca-fleet/SKILL.md"
-  fi
-  if [ "$skill" = "all" ] || [ "$skill" = "handoff" ]; then
-    files="$files
-.agents/skills/handoff/SKILL.md"
-  fi
-  if [ "$skill" = "all" ] || [ "$skill" = "run-long-job" ]; then
-    files="$files
-.agents/skills/run-long-job/SKILL.md"
-  fi
-  if [ "$skill" = "all" ] || [ "$skill" = "craft-agent-prompt" ]; then
-    files="$files
-.agents/skills/craft-agent-prompt/SKILL.md"
-  fi
-  if [ "$skill" = "all" ] || [ "$skill" = "design-tool-workflow" ]; then
-    files="$files
-.agents/skills/design-tool-workflow/SKILL.md"
-  fi
-  if [ "$skill" = "all" ] || [ "$skill" = "manage-long-workflow" ]; then
-    files="$files
-.agents/skills/manage-long-workflow/SKILL.md"
-  fi
+  add_skill_files manage-long-workflow SKILL.md agents/openai.yaml
 fi
 
 if { [ "$harness" = "all" ] || [ "$harness" = "codex" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "orca-fleet" ]; }; then
-  files="$files
-.codex/agents/orca-fleet-explorer.toml
-.codex/agents/orca-fleet-general-executor.toml
-.codex/agents/orca-fleet-hard-executor.toml
-.codex/agents/orca-fleet-evaluator.toml"
+  add_file agents/codex/agents/orca-fleet-explorer.toml .codex/agents/orca-fleet-explorer.toml
+  add_file agents/codex/agents/orca-fleet-general-executor.toml .codex/agents/orca-fleet-general-executor.toml
+  add_file agents/codex/agents/orca-fleet-hard-executor.toml .codex/agents/orca-fleet-hard-executor.toml
+  add_file agents/codex/agents/orca-fleet-evaluator.toml .codex/agents/orca-fleet-evaluator.toml
 fi
 
-if [ "$harness" = "all" ] || [ "$harness" = "claude" ]; then
-  if [ "$skill" = "all" ] || [ "$skill" = "orca-fleet" ]; then
-    files="$files
-.claude/skills/orca-fleet/SKILL.md
-.claude/agents/orca-fleet-explorer.md
-.claude/agents/orca-fleet-general-executor.md
-.claude/agents/orca-fleet-hard-executor.md
-.claude/agents/orca-fleet-evaluator.md"
-  fi
-  if [ "$skill" = "all" ] || [ "$skill" = "handoff" ]; then
-    files="$files
-.claude/skills/handoff/SKILL.md"
-  fi
-  if [ "$skill" = "all" ] || [ "$skill" = "run-long-job" ]; then
-    files="$files
-.claude/skills/run-long-job/SKILL.md"
-  fi
-  if [ "$skill" = "all" ] || [ "$skill" = "craft-agent-prompt" ]; then
-    files="$files
-.claude/skills/craft-agent-prompt/SKILL.md"
-  fi
-  if [ "$skill" = "all" ] || [ "$skill" = "design-tool-workflow" ]; then
-    files="$files
-.claude/skills/design-tool-workflow/SKILL.md"
-  fi
-  if [ "$skill" = "all" ] || [ "$skill" = "manage-long-workflow" ]; then
-    files="$files
-.claude/skills/manage-long-workflow/SKILL.md"
-  fi
+if { [ "$harness" = "all" ] || [ "$harness" = "claude" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "orca-fleet" ]; }; then
+  add_file agents/claude/agents/orca-fleet-explorer.md .claude/agents/orca-fleet-explorer.md
+  add_file agents/claude/agents/orca-fleet-general-executor.md .claude/agents/orca-fleet-general-executor.md
+  add_file agents/claude/agents/orca-fleet-hard-executor.md .claude/agents/orca-fleet-hard-executor.md
+  add_file agents/claude/agents/orca-fleet-evaluator.md .claude/agents/orca-fleet-evaluator.md
 fi
 
 if { [ "$harness" = "all" ] || [ "$harness" = "opencode" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "orca-fleet" ]; }; then
-  files="$files
-.opencode/agents/orca-fleet.md
-.opencode/agents/orca-fleet-explorer.md
-.opencode/agents/orca-fleet-general-executor.md
-.opencode/agents/orca-fleet-hard-executor.md
-.opencode/agents/orca-fleet-evaluator.md
-.opencode/commands/orca-fleet.md"
+  add_file agents/opencode/agents/orca-fleet.md .opencode/agents/orca-fleet.md
+  add_file agents/opencode/agents/orca-fleet-explorer.md .opencode/agents/orca-fleet-explorer.md
+  add_file agents/opencode/agents/orca-fleet-general-executor.md .opencode/agents/orca-fleet-general-executor.md
+  add_file agents/opencode/agents/orca-fleet-hard-executor.md .opencode/agents/orca-fleet-hard-executor.md
+  add_file agents/opencode/agents/orca-fleet-evaluator.md .opencode/agents/orca-fleet-evaluator.md
+  add_file agents/opencode/commands/orca-fleet.md .opencode/commands/orca-fleet.md
 fi
 
 if { [ "$harness" = "all" ] || [ "$harness" = "opencode" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "handoff" ]; }; then
-  files="$files
-.opencode/commands/handoff.md"
+  add_file agents/opencode/commands/handoff.md .opencode/commands/handoff.md
 fi
 
 if { [ "$harness" = "all" ] || [ "$harness" = "opencode" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "run-long-job" ]; }; then
-  files="$files
-.opencode/commands/run-long-job.md"
+  add_file agents/opencode/commands/run-long-job.md .opencode/commands/run-long-job.md
 fi
 
 if { [ "$harness" = "all" ] || [ "$harness" = "opencode" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "craft-agent-prompt" ]; }; then
-  files="$files
-.opencode/commands/craft-agent-prompt.md"
+  add_file agents/opencode/commands/craft-agent-prompt.md .opencode/commands/craft-agent-prompt.md
 fi
 
 if { [ "$harness" = "all" ] || [ "$harness" = "opencode" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "design-tool-workflow" ]; }; then
-  files="$files
-.opencode/commands/design-tool-workflow.md"
+  add_file agents/opencode/commands/design-tool-workflow.md .opencode/commands/design-tool-workflow.md
 fi
 
 if { [ "$harness" = "all" ] || [ "$harness" = "opencode" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "manage-long-workflow" ]; }; then
-  files="$files
-.opencode/commands/manage-long-workflow.md"
+  add_file agents/opencode/commands/manage-long-workflow.md .opencode/commands/manage-long-workflow.md
 fi
 
 if [ "$force" -eq 0 ]; then
   conflicts=""
-  for relative_path in $files; do
-    if [ -e "$target/$relative_path" ]; then
+  for file_mapping in $files; do
+    destination_relative=${file_mapping#*|}
+    if [ -e "$target/$destination_relative" ]; then
       conflicts="$conflicts
-$relative_path"
+$destination_relative"
     fi
   done
 
@@ -234,9 +191,11 @@ $relative_path"
 fi
 
 count=0
-for relative_path in $files; do
-  source_path="$source_root/$relative_path"
-  destination_path="$target/$relative_path"
+for file_mapping in $files; do
+  source_relative=${file_mapping%%|*}
+  destination_relative=${file_mapping#*|}
+  source_path="$source_root/$source_relative"
+  destination_path="$target/$destination_relative"
 
   [ -f "$source_path" ] || { printf 'Missing source file: %s\n' "$source_path" >&2; exit 1; }
   mkdir -p "$(dirname -- "$destination_path")"

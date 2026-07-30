@@ -21,15 +21,19 @@ capability required for a role, not by a hard-coded provider or model name.
 
 ## Harness integration
 
-Use the canonical playbook in this directory with the project-local adapters:
+Use the canonical playbook in this directory with the installed project-local
+adapters. Their repository sources live under `agents/<provider>/`:
 
 - **Codex:** Load `.agents/skills/orca-fleet/SKILL.md` and dispatch the four
-  `.codex/agents/orca-fleet-*.toml` workers from the main task.
+  `.codex/agents/orca-fleet-*.toml` workers, sourced from
+  `agents/codex/agents/`, from the main task.
 - **Claude Code:** Run `/orca-fleet <objective>` through
   `.claude/skills/orca-fleet/SKILL.md` and dispatch the four
-  `.claude/agents/orca-fleet-*.md` workers from the main session.
+  `.claude/agents/orca-fleet-*.md` workers, sourced from
+  `agents/claude/agents/`, from the main session.
 - **OpenCode:** Use `.opencode/agents/orca-fleet.md` as the primary orchestrator
-  or run `/orca-fleet <objective>` through the project-local command bridge.
+  or run `/orca-fleet <objective>` through the project-local command bridge;
+  both are sourced from `agents/opencode/`.
 
 Keep models inherited for a portable default. Add harness-local model and
 reasoning overrides only when the available catalog and desired cost/capability

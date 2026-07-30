@@ -21,10 +21,10 @@ for model-specific behavior.
 Choose the narrowest workflow:
 
 - **Single-agent phase work:** use this skill.
-- **Local compute longer than about five minutes:** invoke `$run-long-job` and
+- **Local compute longer than about five minutes:** invoke `run-long-job` and
   end the agent turn after its bounded launch check.
-- **Multi-agent decomposition:** invoke `$orca-fleet`.
-- **Fresh-context transfer:** invoke `$handoff` at a major milestone.
+- **Multi-agent decomposition:** invoke `orca-fleet`.
+- **Fresh-context transfer:** invoke `handoff` at a major milestone.
 - **Long Responses API generation:** use background mode and prefer supported
   webhooks such as `response.completed`; an ordinary service, not a model turn,
   may poll for other terminal states or when webhooks are unavailable.
@@ -71,7 +71,7 @@ requirements; this skill documents them but cannot enforce them:
   behavior justifies them.
 
 Inside an interactive coding harness, use its native compaction control only at
-a milestone. Prefer `$handoff` and a fresh closeout task when the transcript is
+a milestone. Prefer `handoff` and a fresh closeout task when the transcript is
 large or the next phase needs little prior reasoning.
 
 ## Stop useful work, not just loops

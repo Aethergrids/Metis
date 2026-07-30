@@ -2,8 +2,8 @@
 description: Prepare a compact handoff or bounded background assignment
 ---
 
-Read `skills/handoff/SKILL.md` from the repository root and follow it as the
-authoritative handoff workflow for this request:
+Load the `handoff` skill and follow its authoritative workflow for this
+request:
 
 $ARGUMENTS
 
