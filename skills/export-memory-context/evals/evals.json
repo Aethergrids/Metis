@@ -1,0 +1,14 @@
+{
+  "skill_name": "export-memory-context",
+  "evals": [
+    {"id": 0, "name": "dead-ends",
+     "prompt": "Two-day debug session, ended with a fix plus three ruled-out theories. Export it.",
+     "expected_output": "A memory-layout export whose files include the ruled-out theories as first-class facts, not just the fix.", "files": []},
+    {"id": 1, "name": "no-duplicate",
+     "prompt": "Export, but a related memory already exists in the project and must be linked rather than restated.",
+     "expected_output": "Export links [[postgres-replica-conflicts]] and explicitly says it was not duplicated.", "files": []},
+    {"id": 2, "name": "small-session",
+     "prompt": "A single small decision. Export it.",
+     "expected_output": "One or two memory files, not a padded set.", "files": []}
+  ]
+}
