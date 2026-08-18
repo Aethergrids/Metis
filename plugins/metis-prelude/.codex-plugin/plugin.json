@@ -1,0 +1,36 @@
+{
+  "name": "metis-prelude",
+  "version": "0.1.0",
+  "description": "Unified English-language Metis skills for agent workflows and context.",
+  "author": {
+    "name": "Aethergrids",
+    "url": "https://github.com/Aethergrids"
+  },
+  "homepage": "https://github.com/Aethergrids/Metis",
+  "repository": "https://github.com/Aethergrids/Metis",
+  "license": "Apache-2.0",
+  "keywords": [
+    "agents",
+    "orchestration",
+    "context",
+    "workflows"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Metis Prelude",
+    "shortDescription": "Agent orchestration, context, and workflow skills.",
+    "longDescription": "A unified English-language namespace for Metis skills covering orchestration, handoff, long jobs, prompt and tool design, context ledgers, memory export, writing refinement, and artifact styling.",
+    "developerName": "Aethergrids",
+    "category": "Productivity",
+    "capabilities": [
+      "Filesystem",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Organize this work with the appropriate Metis Prelude skill.",
+      "Prepare the current context for a clean continuation.",
+      "Design and verify this multi-step agent workflow."
+    ],
+    "brandColor": "#3B82F6"
+  }
+}

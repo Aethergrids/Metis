@@ -1,0 +1,224 @@
+/* ============================================================
+   xAI / grok-build design tokens — Artifact edition
+   ------------------------------------------------------------
+   shadcn-compatible CSS variables (--background, --foreground,
+   --card, --border, --primary, --muted, --accent, --ring, --radius…)
+   carrying the grok palette:
+     · grounds  — white (light) / lifted near-black #151515 (dark)
+     · accents  — grok-blue #0659D2 + sunset-orange #FF7A17
+     · spectrum — cyan · teal · violet · green · red (status/syntax/DAG)
+   Interactive vocabulary stays MONOCHROME; color is the accent.
+
+   Theme switching is wired for Artifacts (NOT a `.dark` class):
+     · :root                              → light (default)
+     · @media (prefers-color-scheme:dark) → dark, unless the viewer
+        forced light via data-theme
+     · :root[data-theme="dark"]           → dark, always
+   Paste this whole block into the Artifact's <style>. Style every
+   component THROUGH these tokens so both themes work for free.
+   ============================================================ */
+
+:root {
+	/* --- Signature accents (theme-invariant refs) ---------- */
+	--grok-blue: #0659d2;
+	--grok-blue-hover: #0a4aae;
+	--grok-blue-bright: #7aa2ff;   /* dark-canvas periwinkle */
+	--sunset: #ff7a17;
+	--sunset-hover: #e8590c;
+	--grok-cyan: #19c1e0;
+	--grok-teal: #12a3a6;
+	--grok-violet: #7c5cff;
+	--grok-green: #2f8f4e;
+	--grok-red: #d22b2f;
+	--copper: #b9632f;
+
+	/* --- Semantic surfaces (light) ------------------------- */
+	--background: #ffffff;
+	--foreground: #0a0a0b;
+	--card: #ffffff;
+	--card-foreground: #0a0a0b;
+	--popover: #ffffff;
+	--muted: #f4f4f5;
+	--muted-foreground: #6e6e76;
+	--faint: #a1a1aa;                   /* dimmest legible text */
+	--accent: #f4f4f5;                  /* hover fill (monochrome) */
+	--accent-foreground: #0a0a0b;
+	--primary: #0a0a0b;                 /* solid pill fill — monochrome */
+	--primary-foreground: #ffffff;
+	--secondary: #f4f4f5;
+	--secondary-foreground: #0a0a0b;
+	--border: #e7e7ea;
+	--border-strong: #d9d9de;
+	--input: #e1e1e5;
+	--ring: #0659d2;                    /* focus ring = the accent */
+
+	/* --- Accent roles (flip in dark) ----------------------- */
+	--link: var(--grok-blue);
+	--brand-accent: var(--grok-blue);
+	--brand-accent-foreground: #ffffff;
+	--brand-warm: var(--sunset);        /* secondary accent */
+	--brand-warm-foreground: #ffffff;
+	--brand-warm-fg-on-surface: #c2560a; /* readable sunset text on light */
+	--brand-violet: var(--grok-violet);
+
+	/* --- Status (semantic — NOT your accent) --------------- */
+	--status-success: #2f8f4e;   --status-success-bg: rgba(47, 143, 78, 0.10);
+	--status-running: #e8590c;   --status-running-bg: rgba(255, 122, 23, 0.12);
+	--status-queued:  #0659d2;   --status-queued-bg:  rgba(6, 89, 210, 0.10);
+	--status-failure: #d22b2f;   --status-failure-bg: rgba(210, 43, 47, 0.10);
+	--status-idle:    #6e6e76;   --status-idle-bg:    rgba(110, 110, 118, 0.12);
+
+	/* --- Syntax (code / plan surfaces) --------------------- */
+	--syntax-keyword: #0659d2;
+	--syntax-func:    #7c5cff;
+	--syntax-string:  #148d92;
+	--syntax-heading: #c2560a;
+	--syntax-number:  #0a4aae;
+	--syntax-comment: #9a9aa2;
+
+	/* --- Pipeline / DAG engine nodes ----------------------- */
+	--engine-sql: #101012;    --engine-sql-fg: #ffffff;
+	--engine-arrow-bg: rgba(255, 122, 23, 0.12);  --engine-arrow-fg: #c2560a;
+	--engine-python-bg: rgba(6, 89, 210, 0.12);   --engine-python-fg: #0659d2;
+	--engine-python-bd: rgba(6, 89, 210, 0.32);
+
+	/* --- Charts (cool grayscale ramp) ---------------------- */
+	--chart-1: #d4d4d8; --chart-2: #9a9aa2; --chart-3: #6e6e76;
+	--chart-4: #46464c; --chart-5: #26262a;
+
+	/* --- Radius — base 8px; pills for controls ------------- */
+	--radius-sm: 4px;
+	--radius-md: 6px;
+	--radius-lg: 8px;      /* the signature tight card */
+	--radius-xl: 12px;
+	--radius-2xl: 14px;    /* inner panels */
+	--radius-3xl: 16px;    /* outer cards */
+	--radius-shell: 20px;  /* window / app-shell chrome */
+	--radius-pill: 9999px; /* buttons, chips, tabs, selects */
+
+	/* --- Elevation — cards are FLAT (hairline carries it) --- */
+	--shadow-card: none;                              /* flat by default */
+	--shadow-sm:  0 2px 10px -6px rgba(9, 13, 25, 0.14);
+	--shadow-pop: 0 18px 50px -18px rgba(9, 13, 25, 0.24);  /* floating chrome only */
+	--shadow-lift: 0 2px 4px rgba(9,13,25,.06), 0 18px 40px -16px rgba(9,13,25,.20); /* hover */
+
+	/* --- Motion — quick, restrained, no bounce ------------- */
+	--ease-standard: cubic-bezier(0.2, 0, 0, 1);
+	--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+	--duration-fast: 120ms;
+	--duration-base: 180ms;
+
+	color-scheme: light;
+}
+
+/* ---- Dark deltas (only what changes) — duplicated across the
+        two selectors so OS-dark and forced-dark both resolve. ---- */
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--background: #151515;
+		--foreground: #f5f5f5;
+		--card: #1e1e1e;
+		--card-foreground: #f5f5f5;
+		--popover: #1e1e1e;
+		--muted: #242424;
+		--muted-foreground: #9a9a9a;
+		--faint: #6f6f6f;
+		--accent: #242424;
+		--accent-foreground: #f5f5f5;
+		--primary: #f5f5f5;
+		--primary-foreground: #151515;
+		--secondary: #242424;
+		--secondary-foreground: #f5f5f5;
+		--border: #2a2a2a;
+		--border-strong: #3a3a3a;
+		--input: #2e2e2e;
+		--ring: #7aa2ff;
+
+		--link: #8fb0ff;
+		--brand-accent: #6f9bff;
+		--brand-accent-foreground: #08132b;
+		--brand-warm: #ff9a4d;
+		--brand-warm-foreground: #1a0f04;
+		--brand-warm-fg-on-surface: #ff9a4d;
+		--brand-violet: #bc97ff;
+
+		--status-success: #6bbf6f;   --status-success-bg: rgba(107, 191, 111, 0.16);
+		--status-running: #ff9a4d;   --status-running-bg: rgba(255, 154, 77, 0.16);
+		--status-queued:  #8fb0ff;   --status-queued-bg:  rgba(143, 176, 255, 0.16);
+		--status-failure: #ff6166;   --status-failure-bg: rgba(255, 97, 102, 0.16);
+		--status-idle:    #9a9a9a;   --status-idle-bg:    rgba(154, 154, 154, 0.16);
+
+		--syntax-keyword: #93adff; --syntax-func: #bc97ff; --syntax-string: #2bc6be;
+		--syntax-heading: #f5a623; --syntax-number: #93adff; --syntax-comment: #6f6f6f;
+
+		--engine-sql: #2e2e2e; --engine-sql-fg: #f5f5f5;
+		--engine-arrow-bg: rgba(255, 154, 77, 0.16); --engine-arrow-fg: #ff9a4d;
+		--engine-python-bg: rgba(143, 176, 255, 0.16); --engine-python-fg: #9ab8ff;
+		--engine-python-bd: rgba(143, 176, 255, 0.34);
+
+		--chart-1: #3a3a3a; --chart-2: #565656; --chart-3: #7c7c7c;
+		--chart-4: #a6a6a6; --chart-5: #d4d4d4;
+
+		--shadow-sm: 0 2px 10px -6px rgba(0,0,0,.6);
+		--shadow-pop: 0 18px 50px -18px rgba(0,0,0,.6);
+		--shadow-lift: 0 2px 6px rgba(0,0,0,.5), 0 22px 48px -18px rgba(0,0,0,.7);
+		color-scheme: dark;
+	}
+}
+:root[data-theme="dark"] {
+	--background: #151515;
+	--foreground: #f5f5f5;
+	--card: #1e1e1e;
+	--card-foreground: #f5f5f5;
+	--popover: #1e1e1e;
+	--muted: #242424;
+	--muted-foreground: #9a9a9a;
+	--faint: #6f6f6f;
+	--accent: #242424;
+	--accent-foreground: #f5f5f5;
+	--primary: #f5f5f5;
+	--primary-foreground: #151515;
+	--secondary: #242424;
+	--secondary-foreground: #f5f5f5;
+	--border: #2a2a2a;
+	--border-strong: #3a3a3a;
+	--input: #2e2e2e;
+	--ring: #7aa2ff;
+
+	--link: #8fb0ff;
+	--brand-accent: #6f9bff;
+	--brand-accent-foreground: #08132b;
+	--brand-warm: #ff9a4d;
+	--brand-warm-foreground: #1a0f04;
+	--brand-warm-fg-on-surface: #ff9a4d;
+	--brand-violet: #bc97ff;
+
+	--status-success: #6bbf6f;   --status-success-bg: rgba(107, 191, 111, 0.16);
+	--status-running: #ff9a4d;   --status-running-bg: rgba(255, 154, 77, 0.16);
+	--status-queued:  #8fb0ff;   --status-queued-bg:  rgba(143, 176, 255, 0.16);
+	--status-failure: #ff6166;   --status-failure-bg: rgba(255, 97, 102, 0.16);
+	--status-idle:    #9a9a9a;   --status-idle-bg:    rgba(154, 154, 154, 0.16);
+
+	--syntax-keyword: #93adff; --syntax-func: #bc97ff; --syntax-string: #2bc6be;
+	--syntax-heading: #f5a623; --syntax-number: #93adff; --syntax-comment: #6f6f6f;
+
+	--engine-sql: #2e2e2e; --engine-sql-fg: #f5f5f5;
+	--engine-arrow-bg: rgba(255, 154, 77, 0.16); --engine-arrow-fg: #ff9a4d;
+	--engine-python-bg: rgba(143, 176, 255, 0.16); --engine-python-fg: #9ab8ff;
+	--engine-python-bd: rgba(143, 176, 255, 0.34);
+
+	--chart-1: #3a3a3a; --chart-2: #565656; --chart-3: #7c7c7c;
+	--chart-4: #a6a6a6; --chart-5: #d4d4d4;
+
+	--shadow-sm: 0 2px 10px -6px rgba(0,0,0,.6);
+	--shadow-pop: 0 18px 50px -18px rgba(0,0,0,.6);
+	--shadow-lift: 0 2px 6px rgba(0,0,0,.5), 0 22px 48px -18px rgba(0,0,0,.7);
+	color-scheme: dark;
+}
+
+/* ---- Type families (system fallback — Geist CDN is CSP-blocked
+        in Artifacts, so this chain is the deliberate render). ---- */
+:root {
+	--font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	--font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+}

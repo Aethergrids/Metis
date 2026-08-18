@@ -11,9 +11,10 @@ Skills: all, craft-agent-prompt, design-tool-workflow, handoff,
 Harnesses: all, codex, claude, opencode
 
 Install Metis skills and provider adapters as project-local configuration.
-Canonical skills are copied from skills/ into each harness's discovery path;
-provider definitions are copied from agents/ into the matching harness path.
-Existing destination files are preserved unless --force is supplied.
+Canonical English skills are copied from plugins/metis-prelude/skills/ into
+each harness's discovery path; provider definitions are copied from agents/
+into the matching harness path. Existing destination files are preserved
+unless --force is supplied.
 EOF
 }
 
@@ -89,7 +90,7 @@ add_skill_files() {
   shift
 
   for skill_file do
-    source_file="skills/$skill_name/$skill_file"
+    source_file="plugins/metis-prelude/skills/$skill_name/$skill_file"
 
     case "$harness" in
       all|codex|opencode)

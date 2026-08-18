@@ -1,0 +1,4 @@
+interface:
+  display_name: "Run Long Job"
+  short_description: "Supervise long commands without model polling"
+  default_prompt: "Use $metis-prelude:run-long-job to launch this long command safely and leave resumable status artifacts."

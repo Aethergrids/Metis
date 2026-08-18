@@ -1,0 +1,7 @@
+interface:
+  display_name: "Handoff"
+  short_description: "Transfer work or delegate a bounded background task"
+  default_prompt: "Use $metis-prelude:handoff to prepare a compact transfer or bounded background assignment for the next objective."
+
+policy:
+  allow_implicit_invocation: false

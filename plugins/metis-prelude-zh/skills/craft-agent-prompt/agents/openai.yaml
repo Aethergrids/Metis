@@ -1,0 +1,4 @@
+interface:
+  display_name: "构建 Agent Prompt"
+  short_description: "创建精简、可测试的 Agent prompt 契约"
+  default_prompt: "使用 $metis-prelude-zh:craft-agent-prompt 审计并简化这个 Agent prompt。"

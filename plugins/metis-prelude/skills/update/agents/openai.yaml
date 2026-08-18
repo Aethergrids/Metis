@@ -1,0 +1,6 @@
+interface:
+  display_name: "Update Context Ledger"
+  short_description: "Refresh compact project context in place"
+  default_prompt: "Use $metis-prelude:update to organize the current project context in place."
+policy:
+  allow_implicit_invocation: true

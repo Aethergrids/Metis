@@ -1,0 +1,6 @@
+interface:
+  display_name: "导出 Context Ledger"
+  short_description: "将已整理的上下文打包给另一台 host 或 session orchestrator"
+  default_prompt: "使用 $metis-prelude-zh:export 打包当前上下文，以便另一台 host 继续工作。"
+policy:
+  allow_implicit_invocation: true

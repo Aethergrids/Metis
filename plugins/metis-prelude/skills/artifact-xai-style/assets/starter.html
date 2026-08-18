@@ -1,0 +1,118 @@
+<title>Grok-build Artifact — starter</title>
+<!--
+  A self-contained starter in the xAI/grok-build style. Copy this file, keep the
+  <style> token block + reset intact, and replace everything inside <div class="wrap">
+  with real content. It is already Artifact-ready: no <!DOCTYPE>/<html>/<head>/<body>
+  (the Artifact harness wraps it). Publish with the Artifact tool + an emoji favicon.
+  Full token reference: references/tokens.css · component catalog: references/components.md
+-->
+<style>
+  :root {
+    --grok-blue:#0659d2; --sunset:#ff7a17; --grok-violet:#7c5cff; --grok-green:#2f8f4e;
+    --background:#ffffff; --foreground:#0a0a0b; --card:#ffffff; --popover:#ffffff;
+    --muted:#f4f4f5; --muted-foreground:#6e6e76; --faint:#a1a1aa;
+    --accent:#f4f4f5; --accent-foreground:#0a0a0b; --primary:#0a0a0b; --primary-foreground:#ffffff;
+    --secondary:#f4f4f5; --border:#e7e7ea; --border-strong:#d9d9de; --input:#e1e1e5; --ring:#0659d2;
+    --link:var(--grok-blue); --brand-accent:var(--grok-blue); --brand-accent-foreground:#ffffff;
+    --brand-warm:var(--sunset); --brand-warm-fg-on-surface:#c2560a;
+    --status-success:#2f8f4e; --status-success-bg:rgba(47,143,78,.10);
+    --status-running:#e8590c; --status-running-bg:rgba(255,122,23,.12);
+    --status-queued:#0659d2;  --status-queued-bg:rgba(6,89,210,.10);
+    --engine-sql:#101012; --engine-sql-fg:#ffffff;
+    --engine-python-bg:rgba(6,89,210,.12); --engine-python-fg:#0659d2; --engine-python-bd:rgba(6,89,210,.32);
+    --radius-sm:4px; --radius-md:6px; --radius-lg:8px; --radius-2xl:14px; --radius-3xl:16px; --radius-pill:9999px;
+    --shadow-card:none; --shadow-lift:0 2px 4px rgba(9,13,25,.06),0 18px 40px -16px rgba(9,13,25,.20);
+    --ease-out:cubic-bezier(.16,1,.3,1); --duration-base:180ms;
+    --font-sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+    --background:#151515; --foreground:#f5f5f5; --card:#1e1e1e; --popover:#1e1e1e;
+    --muted:#242424; --muted-foreground:#9a9a9a; --faint:#6f6f6f; --accent:#242424; --accent-foreground:#f5f5f5;
+    --primary:#f5f5f5; --primary-foreground:#151515; --secondary:#242424; --border:#2a2a2a; --border-strong:#3a3a3a; --input:#2e2e2e; --ring:#7aa2ff;
+    --link:#8fb0ff; --brand-accent:#6f9bff; --brand-accent-foreground:#08132b; --brand-warm:#ff9a4d; --brand-warm-fg-on-surface:#ff9a4d;
+    --status-success:#6bbf6f; --status-success-bg:rgba(107,191,111,.16);
+    --status-running:#ff9a4d; --status-running-bg:rgba(255,154,77,.16);
+    --status-queued:#8fb0ff;  --status-queued-bg:rgba(143,176,255,.16);
+    --engine-sql:#2e2e2e; --engine-sql-fg:#f5f5f5;
+    --engine-python-bg:rgba(143,176,255,.16); --engine-python-fg:#9ab8ff; --engine-python-bd:rgba(143,176,255,.34);
+    --shadow-lift:0 2px 6px rgba(0,0,0,.5),0 22px 48px -18px rgba(0,0,0,.7); color-scheme:dark;
+  }}
+  :root[data-theme="dark"]{
+    --background:#151515; --foreground:#f5f5f5; --card:#1e1e1e; --popover:#1e1e1e;
+    --muted:#242424; --muted-foreground:#9a9a9a; --faint:#6f6f6f; --accent:#242424; --accent-foreground:#f5f5f5;
+    --primary:#f5f5f5; --primary-foreground:#151515; --secondary:#242424; --border:#2a2a2a; --border-strong:#3a3a3a; --input:#2e2e2e; --ring:#7aa2ff;
+    --link:#8fb0ff; --brand-accent:#6f9bff; --brand-accent-foreground:#08132b; --brand-warm:#ff9a4d; --brand-warm-fg-on-surface:#ff9a4d;
+    --status-success:#6bbf6f; --status-success-bg:rgba(107,191,111,.16);
+    --status-running:#ff9a4d; --status-running-bg:rgba(255,154,77,.16);
+    --status-queued:#8fb0ff;  --status-queued-bg:rgba(143,176,255,.16);
+    --engine-sql:#2e2e2e; --engine-sql-fg:#f5f5f5;
+    --engine-python-bg:rgba(143,176,255,.16); --engine-python-fg:#9ab8ff; --engine-python-bd:rgba(143,176,255,.34);
+    --shadow-lift:0 2px 6px rgba(0,0,0,.5),0 22px 48px -18px rgba(0,0,0,.7); color-scheme:dark;
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--background);color:var(--foreground);font-family:var(--font-sans);line-height:1.55;letter-spacing:-.011em;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:clamp(28px,5vw,72px) clamp(18px,4vw,48px) 96px}
+  .mono{font-family:var(--font-mono)} .tnum{font-variant-numeric:tabular-nums}
+  .eyebrow{font-family:var(--font-mono);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.2em;color:var(--muted-foreground)}
+  h1{font-size:clamp(2.1rem,5.2vw,3.4rem);line-height:1.04;letter-spacing:-.035em;font-weight:560;margin:14px 0 0;text-wrap:balance}
+  h2{font-size:clamp(1.3rem,2.6vw,1.7rem);letter-spacing:-.03em;font-weight:560;margin:0;text-wrap:balance}
+  h3{font-size:1.02rem;letter-spacing:-.02em;font-weight:600;margin:0}
+  p{margin:0} .lede{font-size:clamp(1.02rem,1.7vw,1.18rem);color:var(--muted-foreground);max-width:64ch;margin-top:18px}
+  header{border-bottom:1px solid var(--border);padding-bottom:34px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .glyph{width:26px;height:26px;border-radius:7px;background:var(--foreground);color:var(--background);display:grid;place-items:center;font-weight:700;font-size:14px;font-family:var(--font-mono)}
+  .pill{display:inline-flex;align-items:center;gap:7px;border-radius:var(--radius-pill);font-size:12.5px;font-weight:500;padding:6px 13px;border:1px solid transparent;white-space:nowrap}
+  .pill .dot{width:7px;height:7px;border-radius:50%;flex:none}
+  .pill.ok{background:var(--status-success-bg);color:var(--status-success);border-color:color-mix(in srgb,var(--status-success) 30%,transparent)} .pill.ok .dot{background:var(--status-success)}
+  .pill.warn{background:var(--status-running-bg);color:var(--brand-warm-fg-on-surface);border-color:color-mix(in srgb,var(--status-running) 34%,transparent)} .pill.warn .dot{background:var(--status-running)}
+  .statusline{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:40px}
+  .stat{border:1px solid var(--border);border-radius:var(--radius-2xl);padding:20px;background:var(--card);display:flex;flex-direction:column;gap:6px}
+  .stat .n{font-size:clamp(1.9rem,3.4vw,2.5rem);font-weight:560;letter-spacing:-.04em;line-height:1}
+  .stat .k{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted-foreground)}
+  section{margin-top:clamp(52px,7vw,84px)}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:26px}
+  .sec-head .idx{font-family:var(--font-mono);font-size:12px;color:var(--faint);letter-spacing:.1em}
+  .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .card{border:1px solid var(--border);border-radius:var(--radius-3xl);background:var(--card);padding:22px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:12px;transition:transform var(--duration-base) var(--ease-out),box-shadow var(--duration-base) var(--ease-out),border-color var(--duration-base) var(--ease-out)}
+  .card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);border-color:var(--border-strong)}
+  .tag{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:var(--radius-md);font-weight:600;display:inline-flex;gap:6px;align-items:center}
+  .tag.solid{background:var(--engine-sql);color:var(--engine-sql-fg)} .tag.blue{background:var(--engine-python-bg);color:var(--engine-python-fg);border:1px solid var(--engine-python-bd)}
+  footer{margin-top:72px;padding-top:26px;border-top:1px solid var(--border);font-family:var(--font-mono);font-size:11.5px;color:var(--muted-foreground)}
+  a:focus-visible{outline:2px solid var(--ring);outline-offset:3px;border-radius:var(--radius-md)}
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .reveal{animation:rise .6s var(--ease-out) both} .d1{animation-delay:.05s} .d2{animation-delay:.12s}
+  @media (prefers-reduced-motion:reduce){.reveal{animation:none}.card{transition:none}}
+  @media (max-width:860px){.stats{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+  <header class="reveal">
+    <div class="brand"><div class="glyph">◆</div><span class="eyebrow">Project · Section</span></div>
+    <h1>Replace with your headline</h1>
+    <p class="lede">One or two lines of context. Keep it near 64 characters wide so it reads as a lede, not a paragraph.</p>
+    <div class="statusline">
+      <span class="pill ok"><span class="dot"></span>Shipped</span>
+      <span class="pill warn"><span class="dot"></span>In progress</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><span class="n tnum">4</span><span class="k">Metric one</span></div>
+      <div class="stat"><span class="n tnum">10</span><span class="k">Metric two</span></div>
+      <div class="stat"><span class="n tnum">61</span><span class="k">Metric three</span></div>
+      <div class="stat"><span class="n tnum">996</span><span class="k">Metric four</span></div>
+    </div>
+  </header>
+
+  <section class="reveal d1">
+    <div class="sec-head"><span class="idx">01</span><h2>A section</h2></div>
+    <div class="grid2">
+      <article class="card"><div style="display:flex;gap:8px"><span class="tag solid">tag</span><span class="tag blue">tag</span></div><h3>Card title</h3><p style="color:var(--muted-foreground);font-size:.92rem">Supporting copy for the card.</p></article>
+      <article class="card"><div style="display:flex;gap:8px"><span class="tag blue">tag</span></div><h3>Card title</h3><p style="color:var(--muted-foreground);font-size:.92rem">Supporting copy for the card.</p></article>
+    </div>
+  </section>
+
+  <footer class="reveal d2">docs/path/reference · owner · one-line footer</footer>
+</div>

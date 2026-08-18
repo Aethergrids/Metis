@@ -1,6 +1,0 @@
-interface:
-  display_name: "Export Context Ledger"
-  short_description: "Package context for another host"
-  default_prompt: "Use $metis-context-ledger:export to package the current context for another host."
-policy:
-  allow_implicit_invocation: true

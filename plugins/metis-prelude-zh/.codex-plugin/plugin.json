@@ -1,0 +1,36 @@
+{
+  "name": "metis-prelude-zh",
+  "version": "0.1.0",
+  "description": "统一命名空间下的 Metis 中文 Agent 工作流与上下文技能。",
+  "author": {
+    "name": "Aethergrids",
+    "url": "https://github.com/Aethergrids"
+  },
+  "homepage": "https://github.com/Aethergrids/Metis",
+  "repository": "https://github.com/Aethergrids/Metis",
+  "license": "Apache-2.0",
+  "keywords": [
+    "agents",
+    "orchestration",
+    "context",
+    "workflows"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Metis Prelude 中文",
+    "shortDescription": "Metis Agent 编排、上下文与工作流技能。",
+    "longDescription": "Metis 技能的统一中文命名空间，涵盖 Agent 编排、handoff、长任务、prompt 与工具设计、上下文 ledger、memory 导出、表达优化和 Artifact 视觉样式。",
+    "developerName": "Aethergrids",
+    "category": "Productivity",
+    "capabilities": [
+      "Filesystem",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "使用合适的 Metis Prelude 中文技能组织这项工作。",
+      "整理当前上下文，以便在新会话中继续工作。",
+      "设计并验证这个多阶段 Agent 工作流。"
+    ],
+    "brandColor": "#3B82F6"
+  }
+}

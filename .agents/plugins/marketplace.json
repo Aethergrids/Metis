@@ -5,10 +5,22 @@
   },
   "plugins": [
     {
-      "name": "metis-context-ledger",
+      "name": "metis-prelude",
       "source": {
         "source": "local",
-        "path": "./plugins/metis-context-ledger"
+        "path": "./plugins/metis-prelude"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "metis-prelude-zh",
+      "source": {
+        "source": "local",
+        "path": "./plugins/metis-prelude-zh"
       },
       "policy": {
         "installation": "AVAILABLE",
