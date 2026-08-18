@@ -42,6 +42,9 @@ or helps another orchestrator continue the work.
   `MEMORY.md` even when `todo.md` contains several candidates.
 - Link details instead of copying logs, patches, large outputs, or source files.
 - Mark uncertain statements as unverified. Do not turn inference into fact.
+- Do not persist instructions scoped only to the current invocation, such as
+  “do not export this turn” or “do not edit source while refreshing,” unless
+  they also constrain the project work that follows.
 - Remove stale state when it no longer affects the work. Preserve durable
   decisions and learnings in their dedicated files.
 - Never store credentials, tokens, hidden reasoning, or raw transcripts.
