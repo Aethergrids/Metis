@@ -1,3 +1,11 @@
 .DS_Store
 .*/
 *-workspace/
+!.agents/
+.agents/*
+!.agents/plugins/
+.agents/plugins/*
+!.agents/plugins/marketplace.json
+!plugins/*/.codex-plugin/
+plugins/*/.codex-plugin/*
+!plugins/*/.codex-plugin/plugin.json

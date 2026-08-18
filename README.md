@@ -11,15 +11,42 @@ Repository sources are split by responsibility:
 
 ```text
 skills/<skill>/                 canonical skill instructions and resources
+plugins/<plugin>/               namespaced Codex plugin bundles
+.agents/plugins/marketplace.json repo-local plugin catalog
 agents/codex/agents/            Codex worker definitions
 agents/claude/agents/           Claude Code worker definitions
 agents/opencode/agents/         OpenCode primary and worker definitions
 agents/opencode/commands/       OpenCode command definitions
 ```
 
-Skills exist only under `skills/`. The installer copies those canonical sources
-and the selected provider definitions into the hidden discovery paths required
-by a target harness; generated discovery directories are not tracked here.
+Standalone skills live under `skills/`. Namespaced plugin skills live inside
+their plugin under `plugins/`. The installer copies standalone canonical
+sources and selected provider definitions into the hidden discovery paths
+required by a target harness; generated discovery directories are not tracked
+here.
+
+## Context Ledger
+
+`metis-context-ledger` is a filesystem-first Codex plugin with two focused
+skills:
+
+| Skill | Use |
+|---|---|
+| `metis-context-ledger:update` | Maintain the mutable `.metis/context/` workspace in place. |
+| `metis-context-ledger:export` | Copy that workspace into a portable `exp_<uuidv7>` directory. |
+
+The workspace contains a concise `MEMORY.md` entry point plus goal, todo,
+delegation queue, information index, and learnings files. Exported directories
+retain that memory layout so another host can start from `MEMORY.md` after the
+user synchronizes the directory through S3 or another filesystem transport.
+
+The plugin does not create version trees, sessions, agents, tasks, or handoff
+artifacts. Its `export` skill is separate from the atomic `handoff` skill below.
+Python 3.14+ supplies UUIDv7 directly; earlier versions use `duckdb>=1.5.5`.
+Use the standalone `export-memory-context` skill instead when the source is an
+unstructured long session that must be distilled into one-fact-per-file Claude
+memories. `metis-context-ledger:export` only snapshots an already curated
+six-file ledger for cross-host continuation.
 
 ## Handoff
 
