@@ -59,7 +59,7 @@ installation is authorized, install the minimum fallback declared by this
 plugin, for example:
 
 ```bash
-python3 -m pip install "duckdb>=1.3.1"
+python3 -m pip install "duckdb>=1.5.5"
 ```
 
 Never install a system package silently. If installation is not authorized,

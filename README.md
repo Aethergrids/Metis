@@ -42,7 +42,7 @@ user synchronizes the directory through S3 or another filesystem transport.
 
 The plugin does not create version trees, sessions, agents, tasks, or handoff
 artifacts. Its `export` skill is separate from the atomic `handoff` skill below.
-Python 3.14+ supplies UUIDv7 directly; earlier versions use `duckdb>=1.3.1`.
+Python 3.14+ supplies UUIDv7 directly; earlier versions use `duckdb>=1.5.5`.
 Use the standalone `export-memory-context` skill instead when the source is an
 unstructured long session that must be distilled into one-fact-per-file Claude
 memories. `metis-context-ledger:export` only snapshots an already curated

@@ -74,7 +74,7 @@ def validate_uuid7(value: str) -> str:
     now_ms = time.time_ns() // 1_000_000
     if abs(now_ms - timestamp_ms) > MAX_CLOCK_SKEW_MS:
         raise ExportError(
-            "UUIDv7 timestamp is invalid; use Python 3.14+ or DuckDB 1.3.1+"
+            "UUIDv7 timestamp is invalid; use Python 3.14+ or DuckDB 1.5.5+"
         )
     return str(parsed)
 
@@ -89,8 +89,8 @@ def generate_uuid7() -> str:
         import duckdb
     except ModuleNotFoundError as exc:
         raise ExportError(
-            "UUIDv7 requires Python 3.14+ or DuckDB 1.3.1+; install the "
-            'fallback with: python3 -m pip install "duckdb>=1.3.1"'
+            "UUIDv7 requires Python 3.14+ or DuckDB 1.5.5+; install the "
+            'fallback with: python3 -m pip install "duckdb>=1.5.5"'
         ) from exc
 
     row = duckdb.sql("SELECT CAST(uuidv7() AS VARCHAR)").fetchone()
