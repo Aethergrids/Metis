@@ -4,12 +4,12 @@ description: >-
   Export durable context from a long session into a directory laid out like a
   Claude memory store — one fact per file with memory-tool frontmatter, an
   appendable MEMORY.md index, and bulky material in assets/. Use whenever the
-  user asks to export, hand off, archive, or "write down" what was learned so
-  another session or teammate can pick it up; whenever they mention memory
-  layout, the memory tool, or want context organized so it can be merged into a
-  project's memory directory; and whenever a long investigation produced facts
-  that would be expensive to rediscover. Prefer this over a single long handoff
-  document whenever the receiving side is an agent rather than a human reader.
+  user asks to archive or "write down" what was learned so another session can
+  reuse it; whenever they mention memory layout, the memory tool, or want
+  context organized so it can be merged into a project's memory directory; and
+  whenever a long investigation produced facts that would be expensive to
+  rediscover. Do not use for atomic task transfer, delegation, or creating
+  another agent.
 ---
 
 # Export memory-aligned context
@@ -22,6 +22,9 @@ and poor for an agent that needs to recall one fact six weeks later.
 This skill produces the second form: a directory shaped like a Claude memory
 store, so it can be merged into a project's memory directory without reshaping,
 while the narrative and bulky evidence stay beside it as assets.
+
+This is a context archive, not the atomic `handoff` workflow. It never creates
+a task, fork, session, sub-agent, or native handoff artifact.
 
 ## Read the destination before writing anything
 

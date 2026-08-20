@@ -5,14 +5,15 @@
 Metis provides reusable Agent orchestration, workflow, context, and
 communication skills without coupling the workflow to one model provider.
 
-## Skill namespaces
+## Plugin boundaries
 
-Codex skills are published through two parallel plugins:
+Prelude is the general-purpose Metis skill set, published through two parallel
+language plugins:
 
 | Namespace | Language | Example |
 |---|---|---|
-| `metis-prelude` | English | `$metis-prelude:update` |
-| `metis-prelude-zh` | 中文 | `$metis-prelude-zh:update` |
+| `metis-prelude` | English | `$metis-prelude:handoff` |
+| `metis-prelude-zh` | 中文 | `$metis-prelude-zh:handoff` |
 
 The two plugins expose the same skill names. Language belongs to the plugin
 namespace, so Chinese skill names do not carry a `-zh` suffix.
@@ -23,13 +24,10 @@ namespace, so Chinese skill names do not carry a `-zh` suffix.
 | `artifact-xai-style` | Build self-contained HTML Artifacts in the xAI / grok-build visual language. |
 | `craft-agent-prompt` | Create, simplify, evaluate, or migrate Agent prompt contracts. |
 | `design-tool-workflow` | Design bounded tool sets, routing, retrieval, evidence, retries, and stop rules. |
-| `export` | Snapshot an already curated six-file context ledger for another host. |
-| `export-memory-context` | Distill an unstructured long session into one-fact-per-file Claude memories. |
 | `handoff` | Create an atomic, artifact-first task transfer or bounded delegation. |
 | `manage-long-workflow` | Run single-Agent work across phases or context windows with durable state. |
 | `orca-fleet` | Orchestrate bounded multi-Agent work by purpose and complexity. |
 | `run-long-job` | Detach long local compute without keeping a model in a polling loop. |
-| `update` | Maintain the mutable `.metis/context/` workspace in place. |
 
 For example, invoke the English and Chinese versions as:
 
@@ -38,9 +36,25 @@ $metis-prelude:handoff
 $metis-prelude-zh:handoff
 ```
 
+Context management is a separate product boundary. The
+`metis-context-ledger` plugin owns all context lifecycle skills and their
+runtime dependencies:
+
+| Skill | Purpose |
+|---|---|
+| `update` | Maintain the mutable `.metis/context/` workspace in place. |
+| `export` | Snapshot an already curated six-file ledger for another host. |
+| `export-memory-context` | Distill an unstructured long session into one-fact-per-file Claude memories. |
+
+Invoke them as `$metis-context-ledger:update`,
+`$metis-context-ledger:export`, and
+`$metis-context-ledger:export-memory-context`. Context Ledger intentionally
+does not contain the atomic `handoff` skill.
+
 ## Context workflows
 
-The filesystem-first context workflow has three distinct operations:
+The filesystem-first `metis-context-ledger` workflow has three distinct
+operations:
 
 | Operation | Use |
 |---|---|
@@ -62,6 +76,7 @@ or bounded sub-agent. Ledger export never creates or transfers an Agent task.
 ```text
 plugins/metis-prelude/          English Codex plugin and canonical English skills
 plugins/metis-prelude-zh/       Chinese Codex plugin and Chinese skill versions
+plugins/metis-context-ledger/   Context lifecycle skills and export runtime
 .agents/plugins/marketplace.json
                                 repo-local plugin catalog
 agents/codex/agents/            Codex Orca worker definitions
@@ -71,16 +86,17 @@ agents/opencode/commands/       OpenCode command definitions
 scripts/install-metis.sh        legacy project-local multi-harness installer
 ```
 
-The plugin directories are the canonical skill sources. The former standalone
-`skills/` tree and `metis-context-ledger` plugin were folded into these two
-namespaces to avoid duplicate discovery.
+The plugin directories are the canonical skill sources. Prelude contains the
+general skill set; Context Ledger owns context curation and export. The former
+standalone `skills/` tree was folded into these plugin namespaces to avoid
+duplicate discovery.
 
 ## Codex installation
 
-The repo-local catalog is `.agents/plugins/marketplace.json` and contains both
-plugins. Install the repository marketplace in Codex, then install either or
-both plugins from the `metis` marketplace. Start a new task after installing or
-updating so Codex discovers the new namespace.
+The repo-local catalog is `.agents/plugins/marketplace.json` and contains the
+two Prelude language plugins plus Context Ledger. Install only the product and
+language namespaces needed for the task. Start a new task after installing or
+updating so Codex discovers the new namespaces.
 
 ## Project-local harness adapters
 

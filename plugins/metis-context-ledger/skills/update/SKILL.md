@@ -60,9 +60,9 @@ portable. `MEMORY.md` should end with a small `Read next` section linking to
 should state its objective, completion condition, dependencies, and useful
 references. Do not create a task, fork, sub-agent, or handoff artifact.
 
-If the user explicitly asks to transfer or delegate work now, use the separate
-atomic `$metis-prelude:handoff` skill. That workflow is separate from ledger
-maintenance.
+If the user explicitly asks to transfer or delegate work now, use a separately
+installed atomic handoff skill, such as `$metis-prelude:handoff`. That workflow
+is not part of Context Ledger.
 
 ## Finish
 

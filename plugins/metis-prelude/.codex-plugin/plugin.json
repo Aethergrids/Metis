@@ -1,7 +1,7 @@
 {
   "name": "metis-prelude",
   "version": "0.1.0",
-  "description": "Unified English-language Metis skills for agent workflows and context.",
+  "description": "Unified English-language Metis skills for agent workflows.",
   "author": {
     "name": "Aethergrids",
     "url": "https://github.com/Aethergrids"
@@ -12,14 +12,14 @@
   "keywords": [
     "agents",
     "orchestration",
-    "context",
+    "communication",
     "workflows"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Metis Prelude",
-    "shortDescription": "Agent orchestration, context, and workflow skills.",
-    "longDescription": "A unified English-language namespace for Metis skills covering orchestration, handoff, long jobs, prompt and tool design, context ledgers, memory export, writing refinement, and artifact styling.",
+    "shortDescription": "Agent orchestration and workflow skills.",
+    "longDescription": "A unified English-language namespace for Metis skills covering orchestration, handoff, long jobs, prompt and tool design, writing refinement, and artifact styling.",
     "developerName": "Aethergrids",
     "category": "Productivity",
     "capabilities": [
@@ -28,7 +28,7 @@
     ],
     "defaultPrompt": [
       "Organize this work with the appropriate Metis Prelude skill.",
-      "Prepare the current context for a clean continuation.",
+      "Prepare a clear atomic handoff for this task.",
       "Design and verify this multi-step agent workflow."
     ],
     "brandColor": "#3B82F6"

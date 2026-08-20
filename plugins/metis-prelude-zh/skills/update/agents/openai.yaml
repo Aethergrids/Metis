@@ -1,6 +1,0 @@
-interface:
-  display_name: "更新 Context Ledger"
-  short_description: "原地维护紧凑、可移植且与 session 无关的项目上下文"
-  default_prompt: "使用 $metis-prelude-zh:update 原地整理当前项目上下文。"
-policy:
-  allow_implicit_invocation: true
