@@ -1,0 +1,4 @@
+interface:
+  display_name: "设计工具工作流"
+  short_description: "设计有界、证据驱动并具有明确停止条件的 Agent 工具调用路由"
+  default_prompt: "使用 $metis-prelude-zh:design-tool-workflow 设计含明确路由和停止规则的工具工作流。"

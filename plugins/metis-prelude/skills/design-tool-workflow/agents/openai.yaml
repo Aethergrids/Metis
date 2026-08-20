@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Tool Workflow"
+  short_description: "Design bounded, evidence-aware tool routing"
+  default_prompt: "Use $metis-prelude:design-tool-workflow to design a bounded tool workflow with explicit routing and stop rules."

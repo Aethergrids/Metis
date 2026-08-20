@@ -2,187 +2,187 @@
 
 🦬 Yet another agent-fleet harness with deep thoughts and wisdom.
 
-Metis provides reusable orchestration utilities for coordinating coding agents
-without coupling the workflow to a specific model provider or harness.
+Metis provides reusable Agent orchestration, workflow, context, and
+communication skills without coupling the workflow to one model provider.
+
+## Plugin boundaries
+
+Prelude is the general-purpose Metis skill set, published through two parallel
+language plugins:
+
+| Namespace | Language | Example |
+|---|---|---|
+| `metis-prelude` | English | `$metis-prelude:handoff` |
+| `metis-prelude-zh` | 中文 | `$metis-prelude-zh:handoff` |
+
+The two plugins expose the same skill names. Language belongs to the plugin
+namespace, so Chinese skill names do not carry a `-zh` suffix.
+
+| Skill | Purpose |
+|---|---|
+| `agent-expression-refine` | Refine Agent writing into clear, neutral, evidence-calibrated language. |
+| `artifact-xai-style` | Build self-contained HTML Artifacts in the xAI / grok-build visual language. |
+| `craft-agent-prompt` | Create, simplify, evaluate, or migrate Agent prompt contracts. |
+| `design-tool-workflow` | Design bounded tool sets, routing, retrieval, evidence, retries, and stop rules. |
+| `handoff` | Create an atomic, artifact-first task transfer or bounded delegation. |
+| `manage-long-workflow` | Run single-Agent work across phases or context windows with durable state. |
+| `orca-fleet` | Orchestrate bounded multi-Agent work by purpose and complexity. |
+| `run-long-job` | Detach long local compute without keeping a model in a polling loop. |
+
+Plugin names stay the same across harnesses; only the invocation prefix
+changes:
+
+```text
+# Codex plugin installation
+$metis-prelude:handoff
+$metis-prelude-zh:handoff
+
+# Claude Code plugin installation
+/metis-prelude:handoff
+/metis-prelude-zh:handoff
+```
+
+Context management is a separate product boundary, also published as parallel
+English and Chinese plugins:
+
+| Namespace | Language | Example |
+|---|---|---|
+| `metis-context-ledger` | English | `$metis-context-ledger:update` |
+| `metis-context-ledger-zh` | 中文 | `$metis-context-ledger-zh:update` |
+
+These plugins own all context lifecycle skills and their runtime dependencies:
+
+| Skill | Purpose |
+|---|---|
+| `update` | Maintain the mutable `.metis/context/` workspace in place. |
+| `export` | Snapshot an already curated six-file ledger for another host. |
+| `export-memory-context` | Distill an unstructured long session into one-fact-per-file Claude memories. |
+
+Invoke the Chinese variants with the same skill names under the
+`metis-context-ledger-zh` namespace, for example
+`$metis-context-ledger-zh:export` in Codex or
+`/metis-context-ledger-zh:export` in Claude Code. Context Ledger intentionally
+does not contain the atomic `handoff` skill.
+
+## Context workflows
+
+The filesystem-first `metis-context-ledger` workflow has three distinct
+operations:
+
+| Operation | Use |
+|---|---|
+| `update` | Maintain one mutable `.metis/context/` workspace containing `MEMORY.md`, goal, todo, delegation queue, information index, and learnings. |
+| `export` | Copy that curated workspace into `.metis/exports/exp_<uuidv7>/` for filesystem or S3 transport. |
+| `export-memory-context` | Extract selected durable facts from an unstructured session into a Claude memory layout. |
+
+`export` is not version management. UUIDv7 only makes export directories unique
+and time-sortable. It does not create project, session, node, lineage, or
+checkpoint history. Python 3.14+ provides UUIDv7 directly; earlier versions use
+`duckdb>=1.5.5`.
+
+`handoff` remains a separate atomic transfer workflow. It may create a portable
+handoff document and, only when explicitly requested, seed another task, fork,
+or bounded sub-agent. Ledger export never creates or transfers an Agent task.
 
 ## Repository layout
 
-Repository sources are split by responsibility:
-
 ```text
-skills/<skill>/                 canonical skill instructions and resources
-plugins/<plugin>/               namespaced Codex plugin bundles
-.agents/plugins/marketplace.json repo-local plugin catalog
-agents/codex/agents/            Codex worker definitions
-agents/claude/agents/           Claude Code worker definitions
-agents/opencode/agents/         OpenCode primary and worker definitions
-agents/opencode/commands/       OpenCode command definitions
+plugins/metis-prelude/          English Prelude plugin and canonical skills
+plugins/metis-prelude-zh/       Chinese Prelude plugin and skill versions
+plugins/metis-context-ledger/   English context lifecycle plugin and export runtime
+plugins/metis-context-ledger-zh/
+                                Chinese context lifecycle plugin and export runtime
+.agents/plugins/marketplace.json
+                                Codex plugin catalog
+.claude-plugin/marketplace.json Claude Code plugin catalog
+agents/codex/agents/            Codex Orca worker definitions
+agents/claude/agents/           Claude Code Orca worker definitions
+agents/opencode2/agents/        OpenCode2 primary and worker definitions
+agents/opencode2/commands/      OpenCode2 command definitions
+scripts/install-metis.sh        project-local multi-harness installer
 ```
 
-Standalone skills live under `skills/`. Namespaced plugin skills live inside
-their plugin under `plugins/`. The installer copies standalone canonical
-sources and selected provider definitions into the hidden discovery paths
-required by a target harness; generated discovery directories are not tracked
-here.
+The plugin directories are the canonical skill sources. Prelude contains the
+general skill set; Context Ledger owns context curation and export. The former
+standalone `skills/` tree was folded into these plugin namespaces to avoid
+duplicate discovery.
 
-## Context Ledger
+## Codex installation
 
-`metis-context-ledger` is a filesystem-first Codex plugin with two focused
-skills:
+The repo-local catalog is `.agents/plugins/marketplace.json` and contains all
+four product/language plugins. Install only the namespaces needed for the task.
+Codex invokes an installed skill as `$<plugin>:<skill>`. Start a new task after
+installing or updating so Codex discovers the new namespaces.
 
-| Skill | Use |
-|---|---|
-| `metis-context-ledger:update` | Maintain the mutable `.metis/context/` workspace in place. |
-| `metis-context-ledger:export` | Copy that workspace into a portable `exp_<uuidv7>` directory. |
+## Claude Code installation
 
-The workspace contains a concise `MEMORY.md` entry point plus goal, todo,
-delegation queue, information index, and learnings files. Exported directories
-retain that memory layout so another host can start from `MEMORY.md` after the
-user synchronizes the directory through S3 or another filesystem transport.
+The repository-level `.claude-plugin/marketplace.json` publishes the same four
+plugins. Each plugin includes a `.claude-plugin/plugin.json`; Prelude also
+bundles the Claude-native Orca worker agents. Claude Code addresses installed
+skills as `/<plugin>:<skill>`.
 
-The plugin does not create version trees, sessions, agents, tasks, or handoff
-artifacts. Its `export` skill is separate from the atomic `handoff` skill below.
-Python 3.14+ supplies UUIDv7 directly; earlier versions use `duckdb>=1.5.5`.
-Use the standalone `export-memory-context` skill instead when the source is an
-unstructured long session that must be distilled into one-fact-per-file Claude
-memories. `metis-context-ledger:export` only snapshots an already curated
-six-file ledger for cross-host continuation.
+## Project-local harness adapters
 
-## Handoff
-
-`handoff` creates a compact, artifact-first transfer for a fresh task, fork, or
-explicitly requested background sub-agent. It is useful for assigning a
-lightweight bounded task without forwarding a noisy transcript while keeping
-integration and verification with the source agent.
-
-The canonical workflow lives in `skills/handoff/`. After installation, each
-supported coding agent has a project-local entry point:
-
-| Harness | Installed entry point | Invoke |
-|---|---|---|
-| Codex | `.agents/skills/handoff/SKILL.md` | `$handoff <focus or assignment>` |
-| Claude Code | `.claude/skills/handoff/SKILL.md` | `/handoff <focus or assignment>` |
-| OpenCode | `.agents/skills/handoff/SKILL.md` and `.opencode/commands/handoff.md` | `/handoff <focus or assignment>` |
-
-## Run Long Job
-
-`run-long-job` launches training, backfills, migrations, materializations,
-benchmarks, large builds, and other long local commands as detached processes.
-It records the command, working directory, Git SHA, PIDs, log path, compact
-status, and a one-line terminal sentinel without keeping an agent alive to poll.
-
-| Harness | Installed entry point | Invoke |
-|---|---|---|
-| Codex | `.agents/skills/run-long-job/SKILL.md` | `$run-long-job <command or objective>` |
-| Claude Code | `.claude/skills/run-long-job/SKILL.md` | `/run-long-job <command or objective>` |
-| OpenCode | `.agents/skills/run-long-job/SKILL.md` and `.opencode/commands/run-long-job.md` | `/run-long-job <command or objective>` |
-
-## Prompt and Workflow Design
-
-Three focused skills apply OpenAI's current
-[GPT-5.6 Sol prompting guidance](https://developers.openai.com/api/docs/guides/prompt-guidance-gpt-5p6)
-without loading one large generic prompt playbook:
-
-| Skill | Use |
-|---|---|
-| `craft-agent-prompt` | Create, simplify, evaluate, or migrate agent prompt contracts. |
-| `design-tool-workflow` | Define tools, routing, retrieval budgets, programmatic reductions, evidence, retries, and stop rules. |
-| `manage-long-workflow` | Run single-agent work across phases or context windows with sparse updates and deliberate state. |
-
-Invoke them as `$craft-agent-prompt`, `$design-tool-workflow`, and
-`$manage-long-workflow` in Codex, or use the corresponding slash commands in
-Claude Code and OpenCode. `manage-long-workflow` routes detached local compute
-to `run-long-job`, multi-agent work to `orca-fleet`, and context reset to
-`handoff` rather than duplicating those workflows.
-
-## Orca Fleet
-
-`orca-fleet` is a model-neutral orchestration skill for multi-step engineering
-work. It replaces the former `orca` skill and assigns bounded work by purpose
-and complexity:
-
-| Role | Responsibility |
-|---|---|
-| Orchestrator | Own the plan, routing, decisions, integration, and final verification. |
-| Explorer | Gather web evidence, explore codebases, reproduce failures, and reduce uncertainty. |
-| General Executor | Complete clear, routine, low-risk implementation and support work. |
-| Hard Executor | Implement critical work that requires strong reasoning and non-local context consistency. |
-| Evaluator | Perform independent adversarial review and return ranked findings with a refinement plan. |
-
-The canonical playbook and role contracts live in
-[`skills/orca-fleet/`](skills/orca-fleet/).
-
-## Supported harnesses
-
-Metis keeps provider-native definitions under dedicated source directories:
-
-| Harness | Definition source | Installed worker path | Invoke |
-|---|---|---|---|
-| Codex | `agents/codex/agents/*.toml` | `.codex/agents/*.toml` | `$orca-fleet <objective>` |
-| Claude Code | `agents/claude/agents/*.md` | `.claude/agents/*.md` | `/orca-fleet <objective>` |
-| OpenCode | `agents/opencode/{agents,commands}/*.md` | `.opencode/{agents,commands}/*.md` | `/orca-fleet <objective>` |
-
-Codex and Claude Code use the current main session as the orchestrator. OpenCode
-also provides `agents/opencode/agents/orca-fleet.md` as a native primary-agent
-source. All three harnesses expose the same four namespaced worker roles.
-
-### Use Orca Fleet in this repository
-
-The source checkout deliberately does not track generated harness directories.
-Install the desired local configuration into the checkout, then start the
-harness from the repository root:
-
-```bash
-./scripts/install-metis.sh --target . --harness codex
-```
-
-Replace `codex` with `claude` or `opencode` as needed. The generated hidden
-directories are ignored by Git. Invoke the skill with the syntax in the table
-above and include the engineering objective after the skill name.
-
-If a harness was already running when its configuration directory was first
-created, restart the session so it discovers the new skill and agents.
-
-### Install everything for every coding agent
-
-Use the general installer from a Metis checkout. By default it installs every
-Metis skill for Codex, Claude Code, and OpenCode:
+`scripts/install-metis.sh` installs any of the four plugins into Codex, Claude
+Code, or OpenCode2 project-local discovery paths. It copies complete skill
+directories so supporting scripts, references, assets, and metadata stay with
+the skill:
 
 ```bash
 ./scripts/install-metis.sh --target /path/to/target-repository
 ```
 
-This is equivalent to passing `--skill all --harness all`. Filter the install
-when only one skill or coding agent is needed:
+This defaults to `--plugin metis-prelude --skill all --harness all`. A filtered
+Chinese Context Ledger install looks like:
 
 ```bash
 ./scripts/install-metis.sh \
   --target /path/to/target-repository \
-  --skill handoff \
-  --harness claude
+  --plugin metis-context-ledger-zh \
+  --skill export \
+  --harness opencode2
 ```
 
-Valid skill selectors are `all`, `craft-agent-prompt`, `design-tool-workflow`,
-`handoff`, `manage-long-workflow`, `orca-fleet`, and `run-long-job`. Valid
-harness selectors are `all`, `codex`, `claude`, and `opencode`. The target
-directory must already exist. Existing destination files are never overwritten
-unless `--force` is supplied.
+The skill selector is `all` or any skill present in the selected plugin.
+Harness selectors are `all`, `codex`, `claude`, and `opencode2`. Existing
+destination files are preserved unless `--force` is supplied.
 
-The previous `install-orca-fleet.sh` command remains available as an Orca-only
-compatibility wrapper.
+Project-local installation exposes standalone skill names because marketplace
+namespaces do not apply to copied skill directories:
 
-The installer is intentionally project-local. It copies each canonical skill
-directly into the selected harness's discovery directory and maps definitions
-from `agents/<provider>/` into that provider's hidden configuration directory.
-Commit installed output in a downstream repository only when its team wants to
-share generated harness configuration.
+| Harness | Skill destination | Standalone invocation | Orca definitions |
+|---|---|---|---|
+| Codex | `.agents/skills/<skill>/` | `$<skill>` | `.codex/agents/*.toml` |
+| Claude Code | `.claude/skills/<skill>/` | `/<skill>` | `.claude/agents/*.md` |
+| OpenCode2 | `.opencode/skills/<skill>/` | `/<skill>` | `.opencode/agents/*.md` |
 
-### Model selection
+OpenCode2 uses the V2 binary and schema while retaining `.opencode/` for
+project configuration. Discovered skills already become slash commands, so
+only Orca Fleet keeps an explicit command bridge to select its dedicated
+orchestrator. OpenCode V1 adapters and schemas are not supported.
 
-Shared definitions do not pin concrete models. Workers inherit the active model
-unless a local override is added. Configure economical models for Explorer and
-General Executor when appropriate, and orchestrator-level models for Hard
-Executor and Evaluator.
+`install-orca-fleet.sh` remains an Orca-only compatibility wrapper.
 
-Use `run-long-job` for long-running compute. An agent should never remain active
-solely to poll a process.
+## Orca Fleet adapters
+
+`orca-fleet` keeps one durable orchestrator responsible for plan, routing,
+integration, and final verification, and uses four bounded worker roles:
+
+| Role | Responsibility |
+|---|---|
+| Explorer | Gather evidence, map codebases, reproduce failures, and reduce uncertainty. |
+| General Executor | Complete clear, routine, low-risk implementation and support work. |
+| Hard Executor | Implement critical work requiring non-local reasoning and context consistency. |
+| Evaluator | Perform independent adversarial review and return ranked findings. |
+
+Provider-native definitions are installed at:
+
+| Harness | Marketplace invocation | Project-local invocation |
+|---|---|---|
+| Codex | `$metis-prelude:orca-fleet` or `$metis-prelude-zh:orca-fleet` | `$orca-fleet <objective>` |
+| Claude Code | `/metis-prelude:orca-fleet` or `/metis-prelude-zh:orca-fleet` | `/orca-fleet <objective>` |
+| OpenCode2 | Not used | `/orca-fleet <objective>` |
+
+Shared definitions do not pin concrete models. Workers inherit the active
+model unless a harness-local override is added. Long compute belongs to
+`run-long-job`; an Agent should not remain alive solely to poll a process.

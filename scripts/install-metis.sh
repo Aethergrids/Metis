@@ -4,20 +4,23 @@ set -eu
 
 usage() {
   cat <<'EOF'
-Usage: install-metis.sh --target PATH [--skill NAME] [--harness NAME] [--force]
+Usage: install-metis.sh --target PATH [--plugin NAME] [--skill NAME] [--harness NAME] [--force]
 
-Skills: all, craft-agent-prompt, design-tool-workflow, handoff,
-        manage-long-workflow, orca-fleet, run-long-job
-Harnesses: all, codex, claude, opencode
+Plugins: metis-prelude, metis-prelude-zh,
+         metis-context-ledger, metis-context-ledger-zh
+Skills: all, or any skill in the selected plugin
+Harnesses: all, codex, claude, opencode2
 
-Install Metis skills and provider adapters as project-local configuration.
-Canonical skills are copied from skills/ into each harness's discovery path;
-provider definitions are copied from agents/ into the matching harness path.
-Existing destination files are preserved unless --force is supplied.
+Install one Metis plugin as project-local harness configuration. Complete
+skill directories are copied into each harness's discovery path. Orca Fleet
+provider definitions and Context Ledger's export runtime are included when
+their corresponding skills are selected. Existing destination files are
+preserved unless --force is supplied.
 EOF
 }
 
 target=""
+plugin="metis-prelude"
 skill="all"
 harness="all"
 force=0
@@ -27,6 +30,11 @@ while [ "$#" -gt 0 ]; do
     --target)
       [ "$#" -ge 2 ] || { usage >&2; exit 2; }
       target=$2
+      shift 2
+      ;;
+    --plugin)
+      [ "$#" -ge 2 ] || { usage >&2; exit 2; }
+      plugin=$2
       shift 2
       ;;
     --skill)
@@ -58,17 +66,17 @@ done
 [ -n "$target" ] || { printf '%s\n' 'Missing required --target PATH.' >&2; usage >&2; exit 2; }
 [ -d "$target" ] || { printf 'Target directory does not exist: %s\n' "$target" >&2; exit 2; }
 
-case "$skill" in
-  all|craft-agent-prompt|design-tool-workflow|handoff|manage-long-workflow|orca-fleet|run-long-job) ;;
+case "$plugin" in
+  metis-prelude|metis-prelude-zh|metis-context-ledger|metis-context-ledger-zh) ;;
   *)
-    printf 'Unsupported skill: %s\n' "$skill" >&2
+    printf 'Unsupported plugin: %s\n' "$plugin" >&2
     usage >&2
     exit 2
     ;;
 esac
 
 case "$harness" in
-  all|codex|claude|opencode) ;;
+  all|codex|claude|opencode2) ;;
   *)
     printf 'Unsupported harness: %s\n' "$harness" >&2
     usage >&2
@@ -77,6 +85,14 @@ case "$harness" in
 esac
 
 source_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+plugin_skill_root="$source_root/plugins/$plugin/skills"
+
+if [ "$skill" != "all" ] && [ ! -f "$plugin_skill_root/$skill/SKILL.md" ]; then
+  printf 'Unsupported skill for %s: %s\n' "$plugin" "$skill" >&2
+  usage >&2
+  exit 2
+fi
+
 files=""
 
 add_file() {
@@ -84,93 +100,93 @@ add_file() {
 $1|$2"
 }
 
-add_skill_files() {
-  skill_name=$1
-  shift
+skill_mappings() {
+  selected_skill=$1
 
-  for skill_file do
-    source_file="skills/$skill_name/$skill_file"
+  find "$plugin_skill_root/$selected_skill" -type f | sort | while IFS= read -r source_path; do
+    source_relative=${source_path#"$source_root/"}
+    skill_relative=${source_path#"$plugin_skill_root/"}
 
     case "$harness" in
-      all|codex|opencode)
-        add_file "$source_file" ".agents/skills/$skill_name/$skill_file"
+      all|codex)
+        printf '%s|%s\n' "$source_relative" ".agents/skills/$skill_relative"
         ;;
     esac
-
     case "$harness" in
       all|claude)
-        add_file "$source_file" ".claude/skills/$skill_name/$skill_file"
+        printf '%s|%s\n' "$source_relative" ".claude/skills/$skill_relative"
+        ;;
+    esac
+    case "$harness" in
+      all|opencode2)
+        printf '%s|%s\n' "$source_relative" ".opencode/skills/$skill_relative"
         ;;
     esac
   done
 }
 
-if [ "$skill" = "all" ] || [ "$skill" = "orca-fleet" ]; then
-  add_skill_files orca-fleet SKILL.md AGENTS.md
+if [ "$skill" = "all" ]; then
+  selected_skills=$(find "$plugin_skill_root" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort)
+else
+  selected_skills=$skill
 fi
 
-if [ "$skill" = "all" ] || [ "$skill" = "handoff" ]; then
-  add_skill_files handoff SKILL.md agents/openai.yaml
-fi
+for selected_skill in $selected_skills; do
+  selected_mappings=$(skill_mappings "$selected_skill")
+  files="$files
+$selected_mappings"
+done
 
-if [ "$skill" = "all" ] || [ "$skill" = "run-long-job" ]; then
-  add_skill_files run-long-job SKILL.md agents/openai.yaml scripts/long_job.py
-fi
+case "$plugin" in
+  metis-prelude|metis-prelude-zh)
+    if [ "$skill" = "all" ] || [ "$skill" = "orca-fleet" ]; then
+      case "$harness" in
+        all|codex)
+          for source_path in "$source_root"/agents/codex/agents/*; do
+            add_file "${source_path#"$source_root/"}" ".codex/agents/$(basename -- "$source_path")"
+          done
+          ;;
+      esac
+      case "$harness" in
+        all|claude)
+          for source_path in "$source_root"/agents/claude/agents/*; do
+            add_file "${source_path#"$source_root/"}" ".claude/agents/$(basename -- "$source_path")"
+          done
+          ;;
+      esac
+      case "$harness" in
+        all|opencode2)
+          for source_path in "$source_root"/agents/opencode2/agents/*; do
+            add_file "${source_path#"$source_root/"}" ".opencode/agents/$(basename -- "$source_path")"
+          done
+          add_file agents/opencode2/commands/orca-fleet.md .opencode/commands/orca-fleet.md
+          ;;
+      esac
+    fi
+    ;;
+esac
 
-if [ "$skill" = "all" ] || [ "$skill" = "craft-agent-prompt" ]; then
-  add_skill_files craft-agent-prompt SKILL.md agents/openai.yaml
-fi
-
-if [ "$skill" = "all" ] || [ "$skill" = "design-tool-workflow" ]; then
-  add_skill_files design-tool-workflow SKILL.md agents/openai.yaml
-fi
-
-if [ "$skill" = "all" ] || [ "$skill" = "manage-long-workflow" ]; then
-  add_skill_files manage-long-workflow SKILL.md agents/openai.yaml
-fi
-
-if { [ "$harness" = "all" ] || [ "$harness" = "codex" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "orca-fleet" ]; }; then
-  add_file agents/codex/agents/orca-fleet-explorer.toml .codex/agents/orca-fleet-explorer.toml
-  add_file agents/codex/agents/orca-fleet-general-executor.toml .codex/agents/orca-fleet-general-executor.toml
-  add_file agents/codex/agents/orca-fleet-hard-executor.toml .codex/agents/orca-fleet-hard-executor.toml
-  add_file agents/codex/agents/orca-fleet-evaluator.toml .codex/agents/orca-fleet-evaluator.toml
-fi
-
-if { [ "$harness" = "all" ] || [ "$harness" = "claude" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "orca-fleet" ]; }; then
-  add_file agents/claude/agents/orca-fleet-explorer.md .claude/agents/orca-fleet-explorer.md
-  add_file agents/claude/agents/orca-fleet-general-executor.md .claude/agents/orca-fleet-general-executor.md
-  add_file agents/claude/agents/orca-fleet-hard-executor.md .claude/agents/orca-fleet-hard-executor.md
-  add_file agents/claude/agents/orca-fleet-evaluator.md .claude/agents/orca-fleet-evaluator.md
-fi
-
-if { [ "$harness" = "all" ] || [ "$harness" = "opencode" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "orca-fleet" ]; }; then
-  add_file agents/opencode/agents/orca-fleet.md .opencode/agents/orca-fleet.md
-  add_file agents/opencode/agents/orca-fleet-explorer.md .opencode/agents/orca-fleet-explorer.md
-  add_file agents/opencode/agents/orca-fleet-general-executor.md .opencode/agents/orca-fleet-general-executor.md
-  add_file agents/opencode/agents/orca-fleet-hard-executor.md .opencode/agents/orca-fleet-hard-executor.md
-  add_file agents/opencode/agents/orca-fleet-evaluator.md .opencode/agents/orca-fleet-evaluator.md
-  add_file agents/opencode/commands/orca-fleet.md .opencode/commands/orca-fleet.md
-fi
-
-if { [ "$harness" = "all" ] || [ "$harness" = "opencode" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "handoff" ]; }; then
-  add_file agents/opencode/commands/handoff.md .opencode/commands/handoff.md
-fi
-
-if { [ "$harness" = "all" ] || [ "$harness" = "opencode" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "run-long-job" ]; }; then
-  add_file agents/opencode/commands/run-long-job.md .opencode/commands/run-long-job.md
-fi
-
-if { [ "$harness" = "all" ] || [ "$harness" = "opencode" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "craft-agent-prompt" ]; }; then
-  add_file agents/opencode/commands/craft-agent-prompt.md .opencode/commands/craft-agent-prompt.md
-fi
-
-if { [ "$harness" = "all" ] || [ "$harness" = "opencode" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "design-tool-workflow" ]; }; then
-  add_file agents/opencode/commands/design-tool-workflow.md .opencode/commands/design-tool-workflow.md
-fi
-
-if { [ "$harness" = "all" ] || [ "$harness" = "opencode" ]; } && { [ "$skill" = "all" ] || [ "$skill" = "manage-long-workflow" ]; }; then
-  add_file agents/opencode/commands/manage-long-workflow.md .opencode/commands/manage-long-workflow.md
-fi
+case "$plugin" in
+  metis-context-ledger|metis-context-ledger-zh)
+    if [ "$skill" = "all" ] || [ "$skill" = "export" ]; then
+      case "$harness" in
+        all|codex)
+          add_file "plugins/$plugin/scripts/export_context.py" .agents/scripts/export_context.py
+          ;;
+      esac
+      case "$harness" in
+        all|claude)
+          add_file "plugins/$plugin/scripts/export_context.py" .claude/scripts/export_context.py
+          ;;
+      esac
+      case "$harness" in
+        all|opencode2)
+          add_file "plugins/$plugin/scripts/export_context.py" .opencode/scripts/export_context.py
+          ;;
+      esac
+    fi
+    ;;
+esac
 
 if [ "$force" -eq 0 ]; then
   conflicts=""
@@ -203,4 +219,5 @@ for file_mapping in $files; do
   count=$((count + 1))
 done
 
-printf 'Installed %s Metis files for skill=%s harness=%s into %s\n' "$count" "$skill" "$harness" "$target"
+printf 'Installed %s Metis files for plugin=%s skill=%s harness=%s into %s\n' \
+  "$count" "$plugin" "$skill" "$harness" "$target"

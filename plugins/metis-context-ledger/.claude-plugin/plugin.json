@@ -1,0 +1,13 @@
+{
+  "name": "metis-context-ledger",
+  "version": "0.2.0",
+  "description": "Maintain, curate, and export filesystem-first agent context.",
+  "author": {
+    "name": "Aethergrids",
+    "url": "https://github.com/Aethergrids"
+  },
+  "homepage": "https://github.com/Aethergrids/Metis",
+  "repository": "https://github.com/Aethergrids/Metis",
+  "license": "MIT",
+  "keywords": ["context", "memory", "filesystem"]
+}

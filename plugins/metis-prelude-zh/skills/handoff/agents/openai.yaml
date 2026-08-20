@@ -1,0 +1,7 @@
+interface:
+  display_name: "Handoff"
+  short_description: "为新 task 转移当前工作，或委派一项有界的后台任务"
+  default_prompt: "使用 $metis-prelude-zh:handoff 为下一目标准备紧凑转移或有界后台任务。"
+
+policy:
+  allow_implicit_invocation: false

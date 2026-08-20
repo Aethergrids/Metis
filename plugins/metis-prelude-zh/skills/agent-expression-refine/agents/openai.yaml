@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent 中文表达优化"
+  short_description: "将 Agent 输出改写为清晰、标准、中性且可验证的中文"
+  default_prompt: "使用 $metis-prelude-zh:agent-expression-refine 优化这段 Agent 中文输出，使其清晰、标准且中性。"

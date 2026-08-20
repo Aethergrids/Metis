@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Expression Refine"
+  short_description: "Refine agent writing into clear, standard English"
+  default_prompt: "Use $metis-prelude:agent-expression-refine to revise this agent output into clear, standard, neutral English."

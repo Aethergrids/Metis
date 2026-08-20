@@ -1,0 +1,13 @@
+{
+  "name": "metis-prelude",
+  "version": "0.1.0",
+  "description": "Unified English-language Metis skills for agent workflows.",
+  "author": {
+    "name": "Aethergrids",
+    "url": "https://github.com/Aethergrids"
+  },
+  "homepage": "https://github.com/Aethergrids/Metis",
+  "repository": "https://github.com/Aethergrids/Metis",
+  "license": "Apache-2.0",
+  "keywords": ["agents", "orchestration", "communication", "workflows"]
+}

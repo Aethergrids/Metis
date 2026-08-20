@@ -1,6 +1,9 @@
 .DS_Store
 .*/
 *-workspace/
+!.claude-plugin/
+.claude-plugin/*
+!.claude-plugin/marketplace.json
 !.agents/
 .agents/*
 !.agents/plugins/
@@ -9,3 +12,6 @@
 !plugins/*/.codex-plugin/
 plugins/*/.codex-plugin/*
 !plugins/*/.codex-plugin/plugin.json
+!plugins/*/.claude-plugin/
+plugins/*/.claude-plugin/*
+!plugins/*/.claude-plugin/plugin.json

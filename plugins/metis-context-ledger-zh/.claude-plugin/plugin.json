@@ -1,0 +1,13 @@
+{
+  "name": "metis-context-ledger-zh",
+  "version": "0.2.0",
+  "description": "维护、整理并导出 filesystem-first Agent 上下文。",
+  "author": {
+    "name": "Aethergrids",
+    "url": "https://github.com/Aethergrids"
+  },
+  "homepage": "https://github.com/Aethergrids/Metis",
+  "repository": "https://github.com/Aethergrids/Metis",
+  "license": "MIT",
+  "keywords": ["context", "memory", "filesystem"]
+}

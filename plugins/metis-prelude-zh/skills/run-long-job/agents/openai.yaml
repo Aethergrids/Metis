@@ -1,0 +1,4 @@
+interface:
+  display_name: "运行长任务"
+  short_description: "在不让模型轮询的情况下启动并管理长时间运行的本地命令"
+  default_prompt: "使用 $metis-prelude-zh:run-long-job 安全启动这个长任务，并留下可恢复的状态 artifact。"

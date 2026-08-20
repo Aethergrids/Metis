@@ -14,7 +14,7 @@ Create a point-in-time filesystem package from the current ledger. Export is a
 copy operation, not the atomic `handoff` workflow: it never creates a task,
 fork, session, sub-agent, or native handoff artifact.
 
-Use the standalone `export-memory-context` skill instead when the source is an
+Use `$metis-context-ledger:export-memory-context` instead when the source is an
 unstructured long session and the desired output is one durable fact per
 Claude memory file. This skill snapshots an already curated six-file ledger;
 it does not perform another memory-extraction pass.
@@ -32,9 +32,9 @@ must contain:
 - `learnings.md`
 
 If material context changed since the last update, first apply the same
-curation rules as `metis-context-ledger:update`. Before exporting, check the
-six files for contradictions, stale next actions, broken relative links, and
-secrets. Do not include raw transcripts or files outside this allowlist.
+curation rules as `$metis-context-ledger:update`. Before exporting, check the six files
+for contradictions, stale next actions, broken relative links, and secrets. Do
+not include raw transcripts or files outside this allowlist.
 
 ## Run the bundled exporter
 

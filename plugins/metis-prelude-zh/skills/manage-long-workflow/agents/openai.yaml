@@ -1,0 +1,4 @@
+interface:
+  display_name: "管理长工作流"
+  short_description: "使用稀疏更新和持久状态运行跨 phase 的多阶段 Agent 工作"
+  default_prompt: "使用 $metis-prelude-zh:manage-long-workflow 以稀疏更新和持久状态组织这个多阶段任务。"

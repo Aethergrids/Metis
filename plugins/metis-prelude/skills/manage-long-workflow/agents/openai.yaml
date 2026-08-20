@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manage Long Workflow"
+  short_description: "Run multi-phase agent work with durable state"
+  default_prompt: "Use $metis-prelude:manage-long-workflow to structure this multi-phase task with sparse updates and durable state."
