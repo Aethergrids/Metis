@@ -1,5 +1,5 @@
 ---
-description: Orchestrate an objective with the Orca Fleet
+description: Orchestrate an objective with the OpenCode2 Orca Fleet
 agent: orca-fleet
 subtask: false
 ---

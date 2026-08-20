@@ -16,7 +16,7 @@ It must:
    evidence, blockers, and next action.
 2. Support Task Handoff and Session Handoff across sessions, providers, and
    hosts without retaining complete transcripts.
-3. Give Claude Code, Codex, OpenCode, and similar harnesses the same compact
+3. Give Claude Code, Codex, OpenCode2, and similar harnesses the same compact
    context through a CLI or MCP server.
 4. Integrate with `codex-plugin-cc`, Paseo, and native harness features instead
    of recreating their orchestration capabilities.
@@ -39,7 +39,7 @@ model gateway, or project-management system. It does not:
 - retain full transcripts, hidden reasoning, raw logs, patches, or large
   artifacts;
 - synchronize SQLite files between hosts;
-- replace Claude Code, Codex, OpenCode, Paseo, Git, or native harness features.
+- replace Claude Code, Codex, OpenCode2, Paseo, Git, or native harness features.
 
 Git carries code between hosts. External storage carries large artifacts.
 Metis stores only compact state and references to those artifacts.
@@ -95,9 +95,9 @@ available integration:
 | Orchestrator harness | Worker | Preferred route |
 |---|---|---|
 | Claude Code, with an Opus/Fable or other Claude configuration | Codex | `codex-plugin-cc` |
-| Claude Code | OpenCode or another provider | Paseo |
+| Claude Code | OpenCode2 or another provider | Paseo |
 | Codex | A different provider | Paseo |
-| OpenCode | A different provider | Paseo |
+| OpenCode2 | A different provider | Paseo |
 | Any harness | Same-provider native Worker | Native harness facility |
 
 All local cross-provider collaboration uses Paseo except for the preferred

@@ -36,9 +36,15 @@ $metis-prelude:handoff
 $metis-prelude-zh:handoff
 ```
 
-Context management is a separate product boundary. The
-`metis-context-ledger` plugin owns all context lifecycle skills and their
-runtime dependencies:
+Context management is a separate product boundary, also published as parallel
+English and Chinese plugins:
+
+| Namespace | Language | Example |
+|---|---|---|
+| `metis-context-ledger` | English | `$metis-context-ledger:update` |
+| `metis-context-ledger-zh` | 中文 | `$metis-context-ledger-zh:update` |
+
+These plugins own all context lifecycle skills and their runtime dependencies:
 
 | Skill | Purpose |
 |---|---|
@@ -46,10 +52,9 @@ runtime dependencies:
 | `export` | Snapshot an already curated six-file ledger for another host. |
 | `export-memory-context` | Distill an unstructured long session into one-fact-per-file Claude memories. |
 
-Invoke them as `$metis-context-ledger:update`,
-`$metis-context-ledger:export`, and
-`$metis-context-ledger:export-memory-context`. Context Ledger intentionally
-does not contain the atomic `handoff` skill.
+Invoke the Chinese variants with the same skill names under the
+`metis-context-ledger-zh` namespace. Context Ledger intentionally does not
+contain the atomic `handoff` skill.
 
 ## Context workflows
 
@@ -74,16 +79,19 @@ or bounded sub-agent. Ledger export never creates or transfers an Agent task.
 ## Repository layout
 
 ```text
-plugins/metis-prelude/          English Codex plugin and canonical English skills
-plugins/metis-prelude-zh/       Chinese Codex plugin and Chinese skill versions
-plugins/metis-context-ledger/   Context lifecycle skills and export runtime
+plugins/metis-prelude/          English Prelude plugin and canonical skills
+plugins/metis-prelude-zh/       Chinese Prelude plugin and skill versions
+plugins/metis-context-ledger/   English context lifecycle plugin and export runtime
+plugins/metis-context-ledger-zh/
+                                Chinese context lifecycle plugin and export runtime
 .agents/plugins/marketplace.json
-                                repo-local plugin catalog
+                                Codex plugin catalog
+.claude-plugin/marketplace.json Claude Code plugin catalog
 agents/codex/agents/            Codex Orca worker definitions
 agents/claude/agents/           Claude Code Orca worker definitions
-agents/opencode/agents/         OpenCode primary and worker definitions
-agents/opencode/commands/       OpenCode command definitions
-scripts/install-metis.sh        legacy project-local multi-harness installer
+agents/opencode2/agents/        OpenCode2 primary and worker definitions
+agents/opencode2/commands/      OpenCode2 command definitions
+scripts/install-metis.sh        project-local multi-harness installer
 ```
 
 The plugin directories are the canonical skill sources. Prelude contains the
@@ -93,40 +101,48 @@ duplicate discovery.
 
 ## Codex installation
 
-The repo-local catalog is `.agents/plugins/marketplace.json` and contains the
-two Prelude language plugins plus Context Ledger. Install only the product and
-language namespaces needed for the task. Start a new task after installing or
-updating so Codex discovers the new namespaces.
+The repo-local catalog is `.agents/plugins/marketplace.json` and contains all
+four product/language plugins. Install only the namespaces needed for the task.
+Start a new task after installing or updating so Codex discovers them.
+
+## Claude Code installation
+
+The repository-level `.claude-plugin/marketplace.json` publishes the same four
+plugins. Each plugin includes a `.claude-plugin/plugin.json`; Prelude also
+bundles the Claude-native Orca worker agents. Claude Code addresses installed
+skills as `/plugin-name:skill-name`.
 
 ## Project-local harness adapters
 
-`scripts/install-metis.sh` remains available for existing Codex, Claude Code,
-and OpenCode project-local workflows. It copies the portable English skill
-subset from `plugins/metis-prelude/skills/` and provider definitions from
-`agents/<provider>/`:
+`scripts/install-metis.sh` installs any of the four plugins into Codex, Claude
+Code, or OpenCode2 project-local discovery paths. It copies complete skill
+directories so supporting scripts, references, assets, and metadata stay with
+the skill:
 
 ```bash
 ./scripts/install-metis.sh --target /path/to/target-repository
 ```
 
-This is equivalent to `--skill all --harness all`. A filtered install looks
-like:
+This defaults to `--plugin metis-prelude --skill all --harness all`. A filtered
+Chinese Context Ledger install looks like:
 
 ```bash
 ./scripts/install-metis.sh \
   --target /path/to/target-repository \
-  --skill handoff \
-  --harness claude
+  --plugin metis-context-ledger-zh \
+  --skill export \
+  --harness opencode2
 ```
 
-Supported skill selectors are `all`, `craft-agent-prompt`,
-`design-tool-workflow`, `handoff`, `manage-long-workflow`, `orca-fleet`, and
-`run-long-job`. Harness selectors are `all`, `codex`, `claude`, and `opencode`.
-Existing destination files are preserved unless `--force` is supplied.
+The skill selector is `all` or any skill present in the selected plugin.
+Harness selectors are `all`, `codex`, `claude`, and `opencode2`. Existing
+destination files are preserved unless `--force` is supplied.
 
-The compatibility installer exposes standalone names such as `$handoff` because
-Claude Code and OpenCode do not consume Codex plugin namespaces. The Chinese
-namespace is currently distributed through the `metis-prelude-zh` Codex plugin.
+Project-local installation exposes standalone skill names because plugin
+namespaces belong to the marketplace distributions. OpenCode2 uses the V2
+binary and schema while retaining `.opencode/` for project configuration. Its
+discovered skills already become slash commands, so only Orca Fleet keeps an
+explicit command bridge to select the dedicated orchestrator.
 
 `install-orca-fleet.sh` remains an Orca-only compatibility wrapper.
 
@@ -148,7 +164,7 @@ Provider-native definitions are installed at:
 |---|---|---|
 | Codex | `.codex/agents/*.toml` | `$orca-fleet <objective>` through the compatibility installer, or the plugin namespace |
 | Claude Code | `.claude/agents/*.md` | `/orca-fleet <objective>` |
-| OpenCode | `.opencode/{agents,commands}/*.md` | `/orca-fleet <objective>` |
+| OpenCode2 | `.opencode/{skills,agents,commands}/` | `/orca-fleet <objective>` |
 
 Shared definitions do not pin concrete models. Workers inherit the active
 model unless a harness-local override is added. Long compute belongs to

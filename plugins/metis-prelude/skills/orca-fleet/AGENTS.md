@@ -140,7 +140,7 @@ change when doing so would lose context consistency.
 
 Map the role contracts to the project-local definitions:
 
-| Role | Codex | Claude Code | OpenCode |
+| Role | Codex | Claude Code | OpenCode2 |
 |---|---|---|---|
 | Orchestrator | Main task + `$metis-prelude:orca-fleet` (plugin) or `$orca-fleet` (project-local) | Main session + `/orca-fleet` | `.opencode/agents/orca-fleet.md` |
 | Explorer | `.codex/agents/orca-fleet-explorer.toml` | `.claude/agents/orca-fleet-explorer.md` | `.opencode/agents/orca-fleet-explorer.md` |
@@ -149,8 +149,8 @@ Map the role contracts to the project-local definitions:
 | Evaluator | `.codex/agents/orca-fleet-evaluator.toml` | `.claude/agents/orca-fleet-evaluator.md` | `.opencode/agents/orca-fleet-evaluator.md` |
 
 Preserve the single-orchestrator topology in every adapter. Codex workers state
-that they must not delegate, Claude workers deny the `Agent` tool, and OpenCode
-workers deny the `task` permission. Explorer and Evaluator are read-only by
+that they must not delegate, Claude workers deny the `Agent` tool, and OpenCode2
+workers deny the `subagent` permission. Explorer and Evaluator are read-only by
 default on all three harnesses.
 
 Keep concrete models out of shared definitions. Workers inherit the active
@@ -159,7 +159,8 @@ tiers for Explorer and General Executor where appropriate and
 orchestrator-level tiers for Hard Executor and Evaluator.
 
 Keep `plugins/metis-prelude/skills/orca-fleet/SKILL.md` authoritative and keep
-provider definitions under `agents/<provider>/`. Use
+provider definitions under `agents/<provider>/` (`agents/opencode2/` for
+OpenCode2). Use
 `scripts/install-metis.sh --skill orca-fleet` to copy the canonical skill into
 the selected harness discovery path and map one or all provider adapters into
 another project without overwriting existing files by default.

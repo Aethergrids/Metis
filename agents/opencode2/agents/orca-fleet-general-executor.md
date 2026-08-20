@@ -1,8 +1,8 @@
 ---
 description: Implements clear, routine, low-risk tasks with bounded scope and concrete acceptance criteria; use for most ordinary execution work.
 mode: subagent
-permission:
-  task: deny
+permissions:
+  - { action: subagent, resource: "*", effect: deny }
 ---
 
 Act as the Orca Fleet General Executor. Complete the frozen assignment with the

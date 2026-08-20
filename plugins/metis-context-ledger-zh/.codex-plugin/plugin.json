@@ -1,0 +1,35 @@
+{
+  "name": "metis-context-ledger-zh",
+  "version": "0.2.0",
+  "description": "维护、整理并导出 filesystem-first Agent 上下文。",
+  "author": {
+    "name": "Aethergrids",
+    "url": "https://github.com/Aethergrids"
+  },
+  "homepage": "https://github.com/Aethergrids/Metis",
+  "repository": "https://github.com/Aethergrids/Metis",
+  "license": "MIT",
+  "keywords": [
+    "context",
+    "memory",
+    "filesystem"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Metis Context Ledger 中文",
+    "shortDescription": "保持持久上下文紧凑、清晰且可移植。",
+    "longDescription": "维护可变 context ledger，将其导出给另一台 host，或把 session 中的持久知识整理为兼容 Claude memory layout 的文件。",
+    "developerName": "Aethergrids",
+    "category": "Productivity",
+    "capabilities": [
+      "Filesystem",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "把当前上下文整理到 Metis ledger 中。",
+      "导出当前上下文，让另一台 host 可以继续工作。",
+      "把 session 中的持久知识整理为 memory 文件。"
+    ],
+    "brandColor": "#3B82F6"
+  }
+}

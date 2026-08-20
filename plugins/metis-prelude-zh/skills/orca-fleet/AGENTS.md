@@ -122,7 +122,7 @@ task 长度本身不代表难度。大型机械工作应拆成有界 General Exe
 
 将角色契约映射到 project-local 定义：
 
-| 角色 | Codex | Claude Code | OpenCode |
+| 角色 | Codex | Claude Code | OpenCode2 |
 |---|---|---|---|
 | Orchestrator | 主 task + `$metis-prelude-zh:orca-fleet` | 主 session + `/orca-fleet` | `.opencode/agents/orca-fleet.md` |
 | Explorer | `.codex/agents/orca-fleet-explorer.toml` | `.claude/agents/orca-fleet-explorer.md` | `.opencode/agents/orca-fleet-explorer.md` |
@@ -131,12 +131,13 @@ task 长度本身不代表难度。大型机械工作应拆成有界 General Exe
 | Evaluator | `.codex/agents/orca-fleet-evaluator.toml` | `.claude/agents/orca-fleet-evaluator.md` | `.opencode/agents/orca-fleet-evaluator.md` |
 
 所有 adapter 都保持 single-orchestrator topology。Codex worker 声明不得继续 delegate，
-Claude worker 禁用 `Agent` tool，OpenCode worker 禁用 `task` permission。Explorer 与
+Claude worker 禁用 `Agent` tool，OpenCode2 worker 禁用 `subagent` permission。Explorer 与
 Evaluator 在三个 harness 中默认只读。
 
 共享定义不固定具体模型；worker 默认继承 active model。需要时为 Explorer 与 General
 Executor 使用经济能力层，为 Hard Executor 与 Evaluator 使用 orchestrator 级能力。
 
 以 `plugins/metis-prelude-zh/skills/orca-fleet/SKILL.md` 为中文权威版本；provider
-definition 保持在 `agents/<provider>/`。现有 `scripts/install-metis.sh --skill orca-fleet`
-安装英文 project-local 版本；Codex 中文版本通过 `metis-prelude-zh` plugin 提供。
+definition 保持在 `agents/<provider>/`（OpenCode2 使用 `agents/opencode2/`）。现有
+`scripts/install-metis.sh --plugin metis-prelude-zh --skill orca-fleet` 安装中文
+project-local 版本。

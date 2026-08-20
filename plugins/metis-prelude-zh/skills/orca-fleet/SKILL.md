@@ -3,7 +3,7 @@ name: orca-fleet
 description: >-
   面向长时间、多步骤或多 Agent 工程工作的模型中立编排手册。适用于协调 sub-agent、
   按复杂度分解工作、分派研究或实现、执行独立对抗性 review、管理 background compute
-  或集成 worker 结果，包括通过 Codex、Claude Code 或 OpenCode 的 Agent 定义工作。
+  或集成 worker 结果，包括通过 Codex、Claude Code 或 OpenCode2 的 Agent 定义工作。
   定义 orchestrator、Explorer、General Executor、Hard Executor 和 Evaluator 的职责，
   以及有界 handoff、验证规则和成本安全的监控方式。委派、启动无人值守任务或让任务过夜
   运行前应先使用。完整角色契约见 AGENTS.md。
@@ -25,9 +25,9 @@ description: >-
 - **Claude Code：** 通过 `.claude/skills/orca-fleet/SKILL.md` 运行
   `/orca-fleet <objective>`，并从主 session 分派
   `.claude/agents/orca-fleet-*.md` worker；源文件位于 `agents/claude/agents/`。
-- **OpenCode：** 使用 `.opencode/agents/orca-fleet.md` 作为主 orchestrator，或通过
+- **OpenCode2：** 使用 `.opencode/agents/orca-fleet.md` 作为主 orchestrator，或通过
   project-local command bridge 运行 `/orca-fleet <objective>`；两者源文件都位于
-  `agents/opencode/`。
+  `agents/opencode2/`。OpenCode2 仍以 `.opencode/` 作为项目内配置目录。
 
 为保证可移植性，默认继承当前模型。只有明确知道可用 catalog 和成本/能力层级时，才在
 harness 层设置 model 或 reasoning override。Explorer 与 General Executor 优先使用经济

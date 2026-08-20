@@ -1,0 +1,25 @@
+{
+  "name": "metis",
+  "description": "Metis skills for agent workflows and filesystem-first context management.",
+  "owner": {
+    "name": "Aethergrids"
+  },
+  "plugins": [
+    {
+      "name": "metis-prelude",
+      "source": "./plugins/metis-prelude"
+    },
+    {
+      "name": "metis-prelude-zh",
+      "source": "./plugins/metis-prelude-zh"
+    },
+    {
+      "name": "metis-context-ledger",
+      "source": "./plugins/metis-context-ledger"
+    },
+    {
+      "name": "metis-context-ledger-zh",
+      "source": "./plugins/metis-context-ledger-zh"
+    }
+  ]
+}

@@ -174,7 +174,7 @@ and which one records the state.
 
 The content is portable — plain Markdown with YAML frontmatter, and `[[links]]`
 degrade to literal text. The *loading* is not: Claude Code recalls from the
-memory directory automatically, while Codex, OpenCode and Cursor read
+memory directory automatically, while Codex, OpenCode2 and Cursor read
 `AGENTS.md` files found by walking up from the working directory and will not
 discover a `memory/` folder on their own.
 

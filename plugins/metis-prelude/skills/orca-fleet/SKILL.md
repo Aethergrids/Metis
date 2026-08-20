@@ -5,7 +5,7 @@ description: >-
   multi-agent engineering work. Use whenever coordinating sub-agents,
   decomposing work by complexity, dispatching research or implementation,
   running an independent adversarial review, monitoring background compute, or
-  integrating worker results, including through Codex, Claude Code, or OpenCode
+  integrating worker results, including through Codex, Claude Code, or OpenCode2
   agent definitions. Defines the orchestrator's responsibilities, Explorer,
   General Executor, Hard Executor, and Evaluator roles, bounded handoffs,
   verification rules, and cost-safe monitoring practices. Consult before
@@ -32,9 +32,10 @@ adapters. Their repository sources live under `agents/<provider>/`:
   `.claude/skills/orca-fleet/SKILL.md` and dispatch the four
   `.claude/agents/orca-fleet-*.md` workers, sourced from
   `agents/claude/agents/`, from the main session.
-- **OpenCode:** Use `.opencode/agents/orca-fleet.md` as the primary orchestrator
+- **OpenCode2:** Use `.opencode/agents/orca-fleet.md` as the primary orchestrator
   or run `/orca-fleet <objective>` through the project-local command bridge;
-  both are sourced from `agents/opencode/`.
+  both are sourced from `agents/opencode2/`. OpenCode2 keeps `.opencode/` as
+  its project-local configuration directory.
 
 Keep models inherited for a portable default. Add harness-local model and
 reasoning overrides only when the available catalog and desired cost/capability
