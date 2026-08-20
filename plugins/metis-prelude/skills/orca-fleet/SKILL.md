@@ -21,21 +21,20 @@ capability required for a role, not by a hard-coded provider or model name.
 
 ## Harness integration
 
-Use the canonical playbook in this directory with the installed project-local
-adapters. Their repository sources live under `agents/<provider>/`:
+Use this canonical playbook with the distribution mode available to the active
+harness:
 
-- **Codex plugin:** Invoke `$metis-prelude:orca-fleet` and dispatch the four
-  `.codex/agents/orca-fleet-*.toml` workers, sourced from
-  `agents/codex/agents/`, from the main task. The project-local installer also
-  exposes the standalone `$orca-fleet` name.
-- **Claude Code:** Run `/orca-fleet <objective>` through
-  `.claude/skills/orca-fleet/SKILL.md` and dispatch the four
-  `.claude/agents/orca-fleet-*.md` workers, sourced from
-  `agents/claude/agents/`, from the main session.
-- **OpenCode2:** Use `.opencode/agents/orca-fleet.md` as the primary orchestrator
-  or run `/orca-fleet <objective>` through the project-local command bridge;
-  both are sourced from `agents/opencode2/`. OpenCode2 keeps `.opencode/` as
-  its project-local configuration directory.
+- **Codex:** A plugin install exposes `$metis-prelude:orca-fleet` and uses the
+  subagents available to the main task. A project-local install exposes
+  `$orca-fleet` and adds the exact named `.codex/agents/orca-fleet-*.toml`
+  workers sourced from `agents/codex/agents/`.
+- **Claude Code:** A plugin install exposes `/metis-prelude:orca-fleet` and
+  loads the workers bundled at the plugin root. A project-local install exposes
+  `/orca-fleet` and copies the same workers from `agents/claude/agents/` into
+  `.claude/agents/`.
+- **OpenCode2:** Project-local installation exposes `/orca-fleet`, installs the
+  primary orchestrator and workers from `agents/opencode2/`, and keeps
+  `.opencode/` as the configuration directory. OpenCode V1 is not supported.
 
 Keep models inherited for a portable default. Add harness-local model and
 reasoning overrides only when the available catalog and desired cost/capability

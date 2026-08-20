@@ -120,24 +120,47 @@ task 长度本身不代表难度。大型机械工作应拆成有界 General Exe
 
 ## 9. Harness adapter
 
-将角色契约映射到 project-local 定义：
+将角色契约映射到各 harness，同时保持 topology 不变。下表列出 project-local adapter
+目标路径。Claude marketplace 安装会加载 plugin root 内打包的同等 worker。Codex
+marketplace 安装保留这些角色契约，但使用当前 task 可用的 sub-agent；若需要精确命名的
+TOML 角色，使用 project-local installer。
 
-| 角色 | Codex | Claude Code | OpenCode2 |
+| 角色 | Codex 定义 | Claude Code 定义 | OpenCode2 定义 |
 |---|---|---|---|
-| Orchestrator | 主 task + `$metis-prelude-zh:orca-fleet` | 主 session + `/orca-fleet` | `.opencode/agents/orca-fleet.md` |
+| Orchestrator | 主 task 加载 skill | 主 session 加载 skill | `.opencode/agents/orca-fleet.md` |
 | Explorer | `.codex/agents/orca-fleet-explorer.toml` | `.claude/agents/orca-fleet-explorer.md` | `.opencode/agents/orca-fleet-explorer.md` |
 | General Executor | `.codex/agents/orca-fleet-general-executor.toml` | `.claude/agents/orca-fleet-general-executor.md` | `.opencode/agents/orca-fleet-general-executor.md` |
 | Hard Executor | `.codex/agents/orca-fleet-hard-executor.toml` | `.claude/agents/orca-fleet-hard-executor.md` | `.opencode/agents/orca-fleet-hard-executor.md` |
 | Evaluator | `.codex/agents/orca-fleet-evaluator.toml` | `.claude/agents/orca-fleet-evaluator.md` | `.opencode/agents/orca-fleet-evaluator.md` |
 
+根据 distribution mode 使用对应调用方式：
+
+| Harness | Plugin 或 marketplace 安装 | Project-local 安装 |
+|---|---|---|
+| Codex | `$metis-prelude-zh:orca-fleet` | `$orca-fleet` |
+| Claude Code | `/metis-prelude-zh:orca-fleet` | `/orca-fleet` |
+| OpenCode2 | 不使用 | `/orca-fleet` |
+
 所有 adapter 都保持 single-orchestrator topology。Codex worker 声明不得继续 delegate，
 Claude worker 禁用 `Agent` tool，OpenCode2 worker 禁用 `subagent` permission。Explorer 与
 Evaluator 在三个 harness 中默认只读。
 
+OpenCode 适配只支持 OpenCode2。目标目录继续使用 `.opencode/`，但必须采用 V2 的有序
+`permissions` 数组以及 `shell`、`subagent` action；不得生成 V1 的 `permission`、
+`bash` 或 `task` 字段。
+
 共享定义不固定具体模型；worker 默认继承 active model。需要时为 Explorer 与 General
 Executor 使用经济能力层，为 Hard Executor 与 Evaluator 使用 orchestrator 级能力。
 
-以 `plugins/metis-prelude-zh/skills/orca-fleet/SKILL.md` 为中文权威版本；provider
-definition 保持在 `agents/<provider>/`（OpenCode2 使用 `agents/opencode2/`）。现有
-`scripts/install-metis.sh --plugin metis-prelude-zh --skill orca-fleet` 安装中文
-project-local 版本。
+以 `plugins/metis-prelude-zh/skills/orca-fleet/SKILL.md` 为中文权威版本。Canonical
+worker 定义分别位于 `agents/codex/agents/`、`agents/claude/agents/` 和
+`agents/opencode2/agents/`；Prelude plugin 目录同时包含 Claude Code 自包含安装所需的
+Claude worker。OpenCode2 继续使用 `.opencode/` 作为 project-local 配置目录。
+
+使用：
+
+```sh
+scripts/install-metis.sh --plugin metis-prelude-zh --skill orca-fleet --harness <harness>
+```
+
+该命令将中文 skill 与选定 adapter 安装到其他项目，默认不覆盖已有文件。

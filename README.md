@@ -29,11 +29,17 @@ namespace, so Chinese skill names do not carry a `-zh` suffix.
 | `orca-fleet` | Orchestrate bounded multi-Agent work by purpose and complexity. |
 | `run-long-job` | Detach long local compute without keeping a model in a polling loop. |
 
-For example, invoke the English and Chinese versions as:
+Plugin names stay the same across harnesses; only the invocation prefix
+changes:
 
 ```text
+# Codex plugin installation
 $metis-prelude:handoff
 $metis-prelude-zh:handoff
+
+# Claude Code plugin installation
+/metis-prelude:handoff
+/metis-prelude-zh:handoff
 ```
 
 Context management is a separate product boundary, also published as parallel
@@ -53,8 +59,10 @@ These plugins own all context lifecycle skills and their runtime dependencies:
 | `export-memory-context` | Distill an unstructured long session into one-fact-per-file Claude memories. |
 
 Invoke the Chinese variants with the same skill names under the
-`metis-context-ledger-zh` namespace. Context Ledger intentionally does not
-contain the atomic `handoff` skill.
+`metis-context-ledger-zh` namespace, for example
+`$metis-context-ledger-zh:export` in Codex or
+`/metis-context-ledger-zh:export` in Claude Code. Context Ledger intentionally
+does not contain the atomic `handoff` skill.
 
 ## Context workflows
 
@@ -103,14 +111,15 @@ duplicate discovery.
 
 The repo-local catalog is `.agents/plugins/marketplace.json` and contains all
 four product/language plugins. Install only the namespaces needed for the task.
-Start a new task after installing or updating so Codex discovers them.
+Codex invokes an installed skill as `$<plugin>:<skill>`. Start a new task after
+installing or updating so Codex discovers the new namespaces.
 
 ## Claude Code installation
 
 The repository-level `.claude-plugin/marketplace.json` publishes the same four
 plugins. Each plugin includes a `.claude-plugin/plugin.json`; Prelude also
 bundles the Claude-native Orca worker agents. Claude Code addresses installed
-skills as `/plugin-name:skill-name`.
+skills as `/<plugin>:<skill>`.
 
 ## Project-local harness adapters
 
@@ -138,11 +147,19 @@ The skill selector is `all` or any skill present in the selected plugin.
 Harness selectors are `all`, `codex`, `claude`, and `opencode2`. Existing
 destination files are preserved unless `--force` is supplied.
 
-Project-local installation exposes standalone skill names because plugin
-namespaces belong to the marketplace distributions. OpenCode2 uses the V2
-binary and schema while retaining `.opencode/` for project configuration. Its
-discovered skills already become slash commands, so only Orca Fleet keeps an
-explicit command bridge to select the dedicated orchestrator.
+Project-local installation exposes standalone skill names because marketplace
+namespaces do not apply to copied skill directories:
+
+| Harness | Skill destination | Standalone invocation | Orca definitions |
+|---|---|---|---|
+| Codex | `.agents/skills/<skill>/` | `$<skill>` | `.codex/agents/*.toml` |
+| Claude Code | `.claude/skills/<skill>/` | `/<skill>` | `.claude/agents/*.md` |
+| OpenCode2 | `.opencode/skills/<skill>/` | `/<skill>` | `.opencode/agents/*.md` |
+
+OpenCode2 uses the V2 binary and schema while retaining `.opencode/` for
+project configuration. Discovered skills already become slash commands, so
+only Orca Fleet keeps an explicit command bridge to select its dedicated
+orchestrator. OpenCode V1 adapters and schemas are not supported.
 
 `install-orca-fleet.sh` remains an Orca-only compatibility wrapper.
 
@@ -160,11 +177,11 @@ integration, and final verification, and uses four bounded worker roles:
 
 Provider-native definitions are installed at:
 
-| Harness | Worker destination | Invocation |
+| Harness | Marketplace invocation | Project-local invocation |
 |---|---|---|
-| Codex | `.codex/agents/*.toml` | `$orca-fleet <objective>` through the compatibility installer, or the plugin namespace |
-| Claude Code | `.claude/agents/*.md` | `/orca-fleet <objective>` |
-| OpenCode2 | `.opencode/{skills,agents,commands}/` | `/orca-fleet <objective>` |
+| Codex | `$metis-prelude:orca-fleet` or `$metis-prelude-zh:orca-fleet` | `$orca-fleet <objective>` |
+| Claude Code | `/metis-prelude:orca-fleet` or `/metis-prelude-zh:orca-fleet` | `/orca-fleet <objective>` |
+| OpenCode2 | Not used | `/orca-fleet <objective>` |
 
 Shared definitions do not pin concrete models. Workers inherit the active
 model unless a harness-local override is added. Long compute belongs to

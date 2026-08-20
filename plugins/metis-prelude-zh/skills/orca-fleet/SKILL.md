@@ -16,18 +16,16 @@ description: >-
 
 ## Harness 集成
 
-本目录保存 canonical playbook，项目内 adapter 源文件位于 `agents/<provider>/`：
+根据当前 harness 可用的 distribution mode 使用本 canonical playbook：
 
-- **Codex plugin：** 调用 `$metis-prelude-zh:orca-fleet`，由主 task 分派四个
-  `.codex/agents/orca-fleet-*.toml` worker；这些定义来自
-  `agents/codex/agents/`。project-local installer 另提供 standalone
-  `$orca-fleet` 名称。
-- **Claude Code：** 通过 `.claude/skills/orca-fleet/SKILL.md` 运行
-  `/orca-fleet <objective>`，并从主 session 分派
-  `.claude/agents/orca-fleet-*.md` worker；源文件位于 `agents/claude/agents/`。
-- **OpenCode2：** 使用 `.opencode/agents/orca-fleet.md` 作为主 orchestrator，或通过
-  project-local command bridge 运行 `/orca-fleet <objective>`；两者源文件都位于
-  `agents/opencode2/`。OpenCode2 仍以 `.opencode/` 作为项目内配置目录。
+- **Codex：** Plugin 安装暴露 `$metis-prelude-zh:orca-fleet`，使用主 task 当前可用的
+  sub-agent。Project-local 安装暴露 `$orca-fleet`，并从 `agents/codex/agents/` 安装
+  精确命名的 `.codex/agents/orca-fleet-*.toml` worker。
+- **Claude Code：** Plugin 安装暴露 `/metis-prelude-zh:orca-fleet`，加载 plugin root
+  内打包的 worker。Project-local 安装暴露 `/orca-fleet`，并把
+  `agents/claude/agents/` 中的相同 worker 复制到 `.claude/agents/`。
+- **OpenCode2：** Project-local 安装暴露 `/orca-fleet`，从 `agents/opencode2/` 安装主
+  orchestrator 与 worker，并继续使用 `.opencode/` 配置目录。不支持 OpenCode V1。
 
 为保证可移植性，默认继承当前模型。只有明确知道可用 catalog 和成本/能力层级时，才在
 harness 层设置 model 或 reasoning override。Explorer 与 General Executor 优先使用经济

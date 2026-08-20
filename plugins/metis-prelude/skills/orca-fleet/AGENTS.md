@@ -138,29 +138,54 @@ change when doing so would lose context consistency.
 
 ## 9. Harness adapters
 
-Map the role contracts to the project-local definitions:
+Map the role contracts to each harness without changing the topology. The table
+lists project-local adapter destinations. A Claude marketplace install loads
+the equivalent workers bundled at the plugin root. A Codex marketplace install
+keeps these role contracts but uses the subagents available to the active task;
+use the project-local installer when the exact named TOML roles are required.
 
-| Role | Codex | Claude Code | OpenCode2 |
+| Role | Codex definition | Claude Code definition | OpenCode2 definition |
 |---|---|---|---|
-| Orchestrator | Main task + `$metis-prelude:orca-fleet` (plugin) or `$orca-fleet` (project-local) | Main session + `/orca-fleet` | `.opencode/agents/orca-fleet.md` |
+| Orchestrator | Main task loads the skill | Main session loads the skill | `.opencode/agents/orca-fleet.md` |
 | Explorer | `.codex/agents/orca-fleet-explorer.toml` | `.claude/agents/orca-fleet-explorer.md` | `.opencode/agents/orca-fleet-explorer.md` |
 | General Executor | `.codex/agents/orca-fleet-general-executor.toml` | `.claude/agents/orca-fleet-general-executor.md` | `.opencode/agents/orca-fleet-general-executor.md` |
 | Hard Executor | `.codex/agents/orca-fleet-hard-executor.toml` | `.claude/agents/orca-fleet-hard-executor.md` | `.opencode/agents/orca-fleet-hard-executor.md` |
 | Evaluator | `.codex/agents/orca-fleet-evaluator.toml` | `.claude/agents/orca-fleet-evaluator.md` | `.opencode/agents/orca-fleet-evaluator.md` |
+
+Use the invocation that matches the distribution mode:
+
+| Harness | Plugin or marketplace install | Project-local install |
+|---|---|---|
+| Codex | `$metis-prelude:orca-fleet` | `$orca-fleet` |
+| Claude Code | `/metis-prelude:orca-fleet` | `/orca-fleet` |
+| OpenCode2 | Not used | `/orca-fleet` |
 
 Preserve the single-orchestrator topology in every adapter. Codex workers state
 that they must not delegate, Claude workers deny the `Agent` tool, and OpenCode2
 workers deny the `subagent` permission. Explorer and Evaluator are read-only by
 default on all three harnesses.
 
+Treat OpenCode2 as the only supported OpenCode generation. Keep the `.opencode/`
+destination directory, but use the V2 ordered `permissions` array and the
+`shell` and `subagent` action names. Do not emit V1 `permission`, `bash`, or
+`task` fields.
+
 Keep concrete models out of shared definitions. Workers inherit the active
 model unless the user adds a harness-local override. Use economical capability
 tiers for Explorer and General Executor where appropriate and
 orchestrator-level tiers for Hard Executor and Evaluator.
 
-Keep `plugins/metis-prelude/skills/orca-fleet/SKILL.md` authoritative and keep
-provider definitions under `agents/<provider>/` (`agents/opencode2/` for
-OpenCode2). Use
-`scripts/install-metis.sh --skill orca-fleet` to copy the canonical skill into
-the selected harness discovery path and map one or all provider adapters into
-another project without overwriting existing files by default.
+Keep `plugins/metis-prelude/skills/orca-fleet/SKILL.md` authoritative. Canonical
+worker definitions live under `agents/codex/agents/`, `agents/claude/agents/`,
+and `agents/opencode2/agents/`; the Prelude plugin directories also carry the
+Claude workers required for self-contained Claude Code installation. OpenCode2
+retains `.opencode/` as its project-local configuration directory.
+
+Use:
+
+```sh
+scripts/install-metis.sh --plugin metis-prelude --skill orca-fleet --harness <harness>
+```
+
+This copies the canonical skill and selected adapter into another project
+without overwriting existing files by default.
