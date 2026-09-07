@@ -1,0 +1,33 @@
+{
+  "name": "metis-research",
+  "version": "0.1.0",
+  "description": "English-language Metis skills for research reasoning and experiment design.",
+  "author": {
+    "name": "Aethergrids",
+    "url": "https://github.com/Aethergrids"
+  },
+  "homepage": "https://github.com/Aethergrids/Metis",
+  "repository": "https://github.com/Aethergrids/Metis",
+  "license": "Apache-2.0",
+  "keywords": [
+    "research",
+    "scientific-reasoning",
+    "hypotheses",
+    "experiment-design"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Metis Research",
+    "shortDescription": "Research reasoning and discriminating experiment design.",
+    "longDescription": "English-language Metis research skills, starting with research-thinking for clarifying questions, examining arguments, comparing explanations, designing discriminating experiments, and reassessing evidence.",
+    "developerName": "Aethergrids",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "Help clarify this research idea and design a test to distinguish competing explanations."
+    ],
+    "brandColor": "#3B82F6"
+  }
+}

@@ -51,6 +51,30 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Productivity"
+    },
+    {
+      "name": "metis-research",
+      "source": {
+        "source": "local",
+        "path": "./plugins/metis-research"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "metis-research-zh",
+      "source": {
+        "source": "local",
+        "path": "./plugins/metis-research-zh"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
     }
   ]
 }

@@ -7,7 +7,8 @@ usage() {
 Usage: install-metis.sh --target PATH [--plugin NAME] [--skill NAME] [--harness NAME] [--force]
 
 Plugins: metis-prelude, metis-prelude-zh,
-         metis-context-ledger, metis-context-ledger-zh
+         metis-context-ledger, metis-context-ledger-zh,
+         metis-research, metis-research-zh
 Skills: all, or any skill in the selected plugin
 Harnesses: all, codex, claude, opencode2
 
@@ -67,7 +68,7 @@ done
 [ -d "$target" ] || { printf 'Target directory does not exist: %s\n' "$target" >&2; exit 2; }
 
 case "$plugin" in
-  metis-prelude|metis-prelude-zh|metis-context-ledger|metis-context-ledger-zh) ;;
+  metis-prelude|metis-prelude-zh|metis-context-ledger|metis-context-ledger-zh|metis-research|metis-research-zh) ;;
   *)
     printf 'Unsupported plugin: %s\n' "$plugin" >&2
     usage >&2

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Thinking Partner"
+  short_description: "Clarify research ideas and design discriminating tests"
+  default_prompt: "Use $metis-research:research-thinking to clarify this research idea and propose the most informative next test."

@@ -1,0 +1,18 @@
+{
+  "name": "metis-research-zh",
+  "version": "0.1.0",
+  "description": "Metis 中文科研思考技能，用于问题澄清、解释比较与实验设计。",
+  "author": {
+    "name": "Aethergrids",
+    "url": "https://github.com/Aethergrids"
+  },
+  "homepage": "https://github.com/Aethergrids/Metis",
+  "repository": "https://github.com/Aethergrids/Metis",
+  "license": "Apache-2.0",
+  "keywords": [
+    "research",
+    "scientific-reasoning",
+    "hypotheses",
+    "experiment-design"
+  ]
+}

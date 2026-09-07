@@ -2,8 +2,8 @@
 
 🦬 Yet another agent-fleet harness with deep thoughts and wisdom.
 
-Metis provides reusable Agent orchestration, workflow, context, and
-communication skills without coupling the workflow to one model provider.
+Metis provides reusable Agent orchestration, workflow, context, communication,
+and research reasoning skills without coupling the workflow to one model provider.
 
 ## Plugin boundaries
 
@@ -64,6 +64,19 @@ Invoke the Chinese variants with the same skill names under the
 `/metis-context-ledger-zh:export` in Claude Code. Context Ledger intentionally
 does not contain the atomic `handoff` skill.
 
+Research reasoning is available through two parallel language plugins:
+
+| Namespace | Language | Example |
+|---|---|---|
+| `metis-research` | English | `$metis-research:research-thinking` |
+| `metis-research-zh` | 中文 | `$metis-research-zh:research-thinking` |
+
+Their first skill, `research-thinking`, helps clarify research questions,
+examine arguments, compare competing explanations, design discriminating
+experiments, and reassess evidence. Both versions contain the same workflow
+and follow the user's conversational language. Claude Code uses
+`/metis-research:research-thinking` or `/metis-research-zh:research-thinking`.
+
 ## Context workflows
 
 The filesystem-first `metis-context-ledger` workflow has three distinct
@@ -92,6 +105,8 @@ plugins/metis-prelude-zh/       Chinese Prelude plugin and skill versions
 plugins/metis-context-ledger/   English context lifecycle plugin and export runtime
 plugins/metis-context-ledger-zh/
                                 Chinese context lifecycle plugin and export runtime
+plugins/metis-research/         English research reasoning plugin
+plugins/metis-research-zh/      Chinese research reasoning plugin
 .agents/plugins/marketplace.json
                                 Codex plugin catalog
 .claude-plugin/marketplace.json Claude Code plugin catalog
@@ -103,27 +118,28 @@ scripts/install-metis.sh        project-local multi-harness installer
 ```
 
 The plugin directories are the canonical skill sources. Prelude contains the
-general skill set; Context Ledger owns context curation and export. The former
+general skill set; Context Ledger owns context curation and export; Research
+contains research reasoning skills. The former
 standalone `skills/` tree was folded into these plugin namespaces to avoid
 duplicate discovery.
 
 ## Codex installation
 
 The repo-local catalog is `.agents/plugins/marketplace.json` and contains all
-four product/language plugins. Install only the namespaces needed for the task.
+six product/language plugins. Install only the namespaces needed for the task.
 Codex invokes an installed skill as `$<plugin>:<skill>`. Start a new task after
 installing or updating so Codex discovers the new namespaces.
 
 ## Claude Code installation
 
-The repository-level `.claude-plugin/marketplace.json` publishes the same four
+The repository-level `.claude-plugin/marketplace.json` publishes the same six
 plugins. Each plugin includes a `.claude-plugin/plugin.json`; Prelude also
 bundles the Claude-native Orca worker agents. Claude Code addresses installed
 skills as `/<plugin>:<skill>`.
 
 ## Project-local harness adapters
 
-`scripts/install-metis.sh` installs any of the four plugins into Codex, Claude
+`scripts/install-metis.sh` installs any of the six plugins into Codex, Claude
 Code, or OpenCode2 project-local discovery paths. It copies complete skill
 directories so supporting scripts, references, assets, and metadata stay with
 the skill:

@@ -1,0 +1,33 @@
+{
+  "name": "metis-research-zh",
+  "version": "0.1.0",
+  "description": "Metis 中文科研思考技能，用于问题澄清、解释比较与实验设计。",
+  "author": {
+    "name": "Aethergrids",
+    "url": "https://github.com/Aethergrids"
+  },
+  "homepage": "https://github.com/Aethergrids/Metis",
+  "repository": "https://github.com/Aethergrids/Metis",
+  "license": "Apache-2.0",
+  "keywords": [
+    "research",
+    "scientific-reasoning",
+    "hypotheses",
+    "experiment-design"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Metis Research 中文",
+    "shortDescription": "科研问题澄清、解释比较与判别性实验设计。",
+    "longDescription": "Metis 中文科研技能，首个技能 research-thinking 帮助澄清科研问题、检查论证、比较竞争性解释、设计判别性实验并复盘证据。",
+    "developerName": "Aethergrids",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "帮我澄清这个研究想法，并设计一个能区分竞争性解释的验证。"
+    ],
+    "brandColor": "#3B82F6"
+  }
+}

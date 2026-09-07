@@ -1,0 +1,4 @@
+interface:
+  display_name: "科研思考伙伴"
+  short_description: "澄清科研问题、比较竞争性解释、设计判别性实验并复盘研究证据"
+  default_prompt: "使用 $metis-research-zh:research-thinking 澄清这个研究想法，并提出最有信息价值的下一步验证。"
