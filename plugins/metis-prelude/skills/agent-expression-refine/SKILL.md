@@ -1,7 +1,7 @@
 ---
 name: agent-expression-refine
 description: >-
-  Refine English agent output, especially technical explanations, experiment reports, status updates, tables, and conclusions, into clear, standard, neutral, and evidence-calibrated language. Use when drafting, rewriting, or reviewing English agent text that contains nonstandard terminology, invented metaphors, colloquialisms, anthropomorphism, loaded headings or status labels, “X, not Y” contrast constructions, unsupported causal explanations, or forced numbers and conclusions in every table row.
+  Refine English agent output, especially technical explanations, experiment reports, status updates, tables, and conclusions, into clear, standard, neutral, and evidence-calibrated language. Use when drafting, rewriting, or reviewing English agent text that contains nonstandard terminology, invented metaphors, colloquialisms, anthropomorphism, loaded headings or status labels, “X, not Y” contrast constructions, unsupported causal explanations, or forced numbers and conclusions in every table row. Also use for plain-language rewrites of an assistant message to a user.
 ---
 
 # Refine Agent Expression
@@ -21,6 +21,7 @@ Rewrite English agent output as direct, precise technical prose. Preserve the fa
 - Prefer established domain terminology. When an example in this skill conflicts with a standard term in the relevant domain, use the domain-standard term.
 - When a cause has not been confirmed, write “Cause not established” or “The cause has not been established.” Do not add a speculative explanation.
 - Do not require every table row to contain a number, comparison, or conclusion. Stop when the information is complete.
+- When rewriting an assistant message into plain language, keep its facts, code, and point of view unchanged. See Rule 9.
 
 ## Rule 1: Use standard terminology
 
@@ -136,6 +137,27 @@ Name the metric, process, condition, and change directly.
 | The further it exceeds the limit, the more stable it becomes. | Higher truncation rates corresponded to lower reward variance. |
 | The answer content itself was uneven in quality. | Answer quality varied. |
 
+## Rule 9: Rewrite contract for agent output
+
+Applies when the task is a plain-language rewrite of a message an assistant wrote to a user.
+
+- Preserve every fact, name, number, file path, command, identifier, and quoted output exactly. Simpler wording never changes content.
+- Reproduce fenced code blocks byte for byte. Do not rewrite code, identifiers, paths, commands, or quoted tool output, even when the surrounding prose changes language.
+- Use short sentences and everyday words. Keep established domain terms (Rule 1).
+- The text is one turn the assistant wrote to the user. "I" is the assistant; "you" is the user. Keep that point of view. Do not swap roles, address the assistant, or speak as the rewriter.
+- If the user's original question is supplied for context, use it only to understand the message. Do not answer, rewrite, or repeat it.
+- Output only the rewritten text. No preamble, labels, or commentary.
+- Language: Chinese (简体中文) and English are in scope. When a target language is named, write all prose in it, including headings, list items, and table cells, whatever the source language; code, identifiers, paths, commands, and quoted output stay as they are. When none is named, keep the source language.
+- A summary, when requested, is clearly shorter than the source. It keeps key facts, decisions, numbers, and paths and drops repetition, hedging, and secondary detail. It is a simplification, not a translation.
+
+| Source expression | Revision |
+| --- | --- |
+| Here is a simpler version of what the assistant said: … | Remove the preamble. |
+| You (the assistant) changed the file. | I changed the file. |
+| The assistant recommends running the tests. | I recommend running the tests. |
+| About your timeout question, the answer is 30 s. (question supplied as context only) | Output only the rewritten message. Do not answer the context question. |
+| Run the tests with `pytest -q`. (target language: Chinese) | 用 `pytest -q` 运行测试。 |
+
 ## Completion check
 
 - Use established terminology for the relevant domain.
@@ -145,3 +167,4 @@ Name the metric, process, condition, and change directly.
 - Keep unestablished causes explicitly unestablished.
 - Add no unsupported numbers, comparisons, causes, or conclusions.
 - Preserve the source's facts, conclusion strength, and confirmation level.
+- For a plain-language rewrite: facts, code blocks, and identifiers are unchanged; the point of view is the assistant's; the output has no preamble; prose is in the target language when one was named.
