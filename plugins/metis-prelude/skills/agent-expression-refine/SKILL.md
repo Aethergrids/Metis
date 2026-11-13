@@ -148,14 +148,14 @@ Applies when the task is a plain-language rewrite of a message an assistant wrot
 - If the user's original question is supplied for context, use it only to understand the message. Do not answer, rewrite, or repeat it.
 - Output only the rewritten text. No preamble, labels, or commentary.
 - Language: Chinese (简体中文) and English are in scope. When a target language is named, write all prose in it, including headings, list items, and table cells, whatever the source language; code, identifiers, paths, commands, and quoted output stay as they are. When none is named, keep the source language.
-- A summary, when requested, is clearly shorter than the source. It keeps key facts, decisions, numbers, and paths and drops repetition, hedging, and secondary detail. It is a simplification, not a translation.
+- A summary, when requested, is clearly shorter than the source. It keeps key facts, decisions, numbers, paths, and uncertainty markers such as “may,” “likely,” and “appears.” It drops repetition and secondary detail. It is a simplification, not a translation.
 
 | Source expression | Revision |
 | --- | --- |
 | Here is a simpler version of what the assistant said: … | Remove the preamble. |
 | You (the assistant) changed the file. | I changed the file. |
 | The assistant recommends running the tests. | I recommend running the tests. |
-| About your timeout question, the answer is 30 s. (question supplied as context only) | Output only the rewritten message. Do not answer the context question. |
+| Context only: "What is the timeout?" Message: "I have configured the timeout to 30 s." | I set the timeout to 30 s. |
 | Run the tests with `pytest -q`. (target language: Chinese) | 用 `pytest -q` 运行测试。 |
 
 ## Completion check
@@ -167,4 +167,4 @@ Applies when the task is a plain-language rewrite of a message an assistant wrot
 - Keep unestablished causes explicitly unestablished.
 - Add no unsupported numbers, comparisons, causes, or conclusions.
 - Preserve the source's facts, conclusion strength, and confirmation level.
-- For a plain-language rewrite: facts, code blocks, and identifiers are unchanged; the point of view is the assistant's; the output has no preamble; prose is in the target language when one was named.
+- For a plain-language rewrite: facts, code blocks, identifiers, and uncertainty markers are unchanged; the point of view is the assistant's; the output has no preamble; a context question is not answered or repeated; prose is in the target language when one was named.
