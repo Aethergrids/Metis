@@ -1,0 +1,36 @@
+{
+  "name": "dias-kit-zh",
+  "version": "0.2.0",
+  "description": "实验系统研究的方法技能：第一性原理研究步骤、基准设计与量化写作。",
+  "author": {
+    "name": "Aethergrids",
+    "url": "https://github.com/Aethergrids"
+  },
+  "homepage": "https://github.com/Aethergrids/Metis",
+  "repository": "https://github.com/Aethergrids/Metis",
+  "license": "Apache-2.0",
+  "keywords": [
+    "research",
+    "benchmarks",
+    "systems",
+    "writing"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "DIAS Kit 中文",
+    "shortDescription": "研究步骤、基准设计与量化写作。",
+    "longDescription": "实验系统研究的方法技能：第一性原理与自顶向下/自底向上的研究步骤（think-sharp）、依据 Gray《Benchmark Handbook》的基准与负载设计（benchmark-design），以及精确、带量化的研究写作（research-writing）。",
+    "developerName": "Aethergrids",
+    "category": "Productivity",
+    "capabilities": [
+      "Filesystem",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "在改系统之前，用第一性原理刻画这个性能问题。",
+      "为这个负载写一份基准规范。",
+      "收紧这段结果摘要，让每个比较都带数字和单位。"
+    ],
+    "brandColor": "#3B82F6"
+  }
+}

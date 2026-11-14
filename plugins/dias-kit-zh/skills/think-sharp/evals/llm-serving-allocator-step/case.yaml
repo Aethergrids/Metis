@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: llm-serving-allocator-step
+expected_outcome: |
+  回复从给定计数推导分配器的每步代价（约 3,000 次调用 × 0.25 us，约每步 0.75 ms），指出调度器的 CPU 工作（4.1 ms）与 38 ms 的 GPU 步重叠，因此分配器不在 TTFT 的关键路径上，结论是无锁分配器对 p99 TTFT 的影响接近于零，不应作为下一步去实现，并提议收集决定 p99 TTFT 的证据（排队、prefill、调度）。回复注明这些数字来自一次运行。step-allocator.md 是带反驳标准的步骤记录。不把无关项目的目标、引擎或数据集强加进来。

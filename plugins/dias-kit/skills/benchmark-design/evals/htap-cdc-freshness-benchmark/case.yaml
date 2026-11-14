@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: htap-cdc-freshness-benchmark
+expected_outcome: |
+  freshness-benchmark-spec.md specifies a mixed transactional/analytical benchmark for the three designs. It
+  defines freshness (staleness) precisely with a measurement method, combines an OLTP write workload with
+  concurrent dashboard queries, states write load as clients times rate with a sweep, uses latency percentiles
+  rather than averages, gives a scaling rule, considers reusing CH-benCHmark or TPC-C/TPC-H, includes
+  correctness checks that the replica converges to the source, calibration of the load generator, fairness rules
+  across the three designs, and an audit with trade-offs and limits.

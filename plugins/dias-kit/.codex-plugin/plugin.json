@@ -1,0 +1,36 @@
+{
+  "name": "dias-kit",
+  "version": "0.2.0",
+  "description": "Method skills for experimental systems research: first-principles research steps, benchmark design, and quantified writing.",
+  "author": {
+    "name": "Aethergrids",
+    "url": "https://github.com/Aethergrids"
+  },
+  "homepage": "https://github.com/Aethergrids/Metis",
+  "repository": "https://github.com/Aethergrids/Metis",
+  "license": "Apache-2.0",
+  "keywords": [
+    "research",
+    "benchmarks",
+    "systems",
+    "writing"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "DIAS Kit",
+    "shortDescription": "Research steps, benchmarks, and quantified writing.",
+    "longDescription": "Method skills for experimental systems research: first-principles and top-down/bottom-up research steps (think-sharp), benchmark and workload design after Gray's Benchmark Handbook (benchmark-design), and precise, quantified research writing (research-writing).",
+    "developerName": "Aethergrids",
+    "category": "Productivity",
+    "capabilities": [
+      "Filesystem",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Characterize this performance problem from first principles before changing the system.",
+      "Design a benchmark specification for this workload.",
+      "Tighten this result summary so every comparison has a number and a unit."
+    ],
+    "brandColor": "#3B82F6"
+  }
+}

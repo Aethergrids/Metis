@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: critique-tpch-eval-plan
+expected_outcome: |
+  The response critiques the plan with findings tied to benchmark principles and graded by severity, and
+  eval-plan-revised.md gives a revised plan. Key problems identified: single run with no repetitions or
+  variance; cold and warm runs mixed (queries right after loading); untuned default Postgres as the main
+  baseline versus a hand-tuned Quark; hand-written physical plans mean it is no longer TPC-H as written and
+  measures the implementers rather than the system; total runtime is dominated by a few long queries; no
+  correctness validation of query answers; a laptop with 16 GB RAM and SF10 conflates memory effects and noise;
+  two scale points cannot support a "scales better" claim. The revision fixes these and audits the plan.

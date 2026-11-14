@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: htap-cdc-freshness-benchmark
+expected_outcome: |
+  freshness-benchmark-spec.md 为三种设计规定一份混合事务/分析基准。它用测量方法精确定义新鲜度（陈旧度），把 OLTP 写入负载与并发的仪表板查询组合在一起，把写入负载写成客户端数乘以速率并做多档扫描，延迟按百分位报告，不单报平均值，给出扩展规则，考虑复用 CH-benCHmark 或 TPC-C/TPC-H，包含副本收敛到源库的正确性检查、负载生成器校准、三种设计之间的公平性规则，以及带权衡和局限的审计。

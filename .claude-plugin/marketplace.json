@@ -1,6 +1,6 @@
 {
   "name": "metis",
-  "description": "Metis skills for agent workflows and filesystem-first context management.",
+  "description": "Metis skills for agent workflows, filesystem-first context management, and experimental systems research.",
   "owner": {
     "name": "Aethergrids"
   },
@@ -20,6 +20,14 @@
     {
       "name": "metis-context-ledger-zh",
       "source": "./plugins/metis-context-ledger-zh"
+    },
+    {
+      "name": "dias-kit",
+      "source": "./plugins/dias-kit"
+    },
+    {
+      "name": "dias-kit-zh",
+      "source": "./plugins/dias-kit-zh"
     }
   ]
 }

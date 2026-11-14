@@ -64,6 +64,27 @@ Invoke the Chinese variants with the same skill names under the
 `/metis-context-ledger-zh:export` in Claude Code. Context Ledger intentionally
 does not contain the atomic `handoff` skill.
 
+Experimental systems research is a separate product boundary, also published
+as parallel English and Chinese plugins:
+
+| Namespace | Language | Example |
+|---|---|---|
+| `dias-kit` | English | `$dias-kit:think-sharp` |
+| `dias-kit-zh` | 中文 | `$dias-kit-zh:think-sharp` |
+
+The two plugins expose the same skill names:
+
+| Skill | Purpose |
+|---|---|
+| `think-sharp` | Run research steps from first principles, top-down characterization, and bottom-up extensions, with a fast assumption-implementation-evaluation loop. |
+| `benchmark-design` | Design, extend, or critique an evaluation workload or benchmark after Gray's *Benchmark Handbook*. |
+| `research-writing` | Write research text so every comparison has a number, a unit, and a stated boundary. |
+
+A benchmark spec from `benchmark-design` is the input to `think-sharp` steps,
+and both write their text with `research-writing`. Invoke the Chinese variants
+as `$dias-kit-zh:benchmark-design` in Codex or `/dias-kit-zh:benchmark-design`
+in Claude Code.
+
 ## Context workflows
 
 The filesystem-first `metis-context-ledger` workflow has three distinct
@@ -92,6 +113,8 @@ plugins/metis-prelude-zh/       Chinese Prelude plugin and skill versions
 plugins/metis-context-ledger/   English context lifecycle plugin and export runtime
 plugins/metis-context-ledger-zh/
                                 Chinese context lifecycle plugin and export runtime
+plugins/dias-kit/               English research-method plugin
+plugins/dias-kit-zh/            Chinese research-method plugin
 .agents/plugins/marketplace.json
                                 Codex plugin catalog
 .claude-plugin/marketplace.json Claude Code plugin catalog
@@ -110,20 +133,20 @@ duplicate discovery.
 ## Codex installation
 
 The repo-local catalog is `.agents/plugins/marketplace.json` and contains all
-four product/language plugins. Install only the namespaces needed for the task.
+six product/language plugins. Install only the namespaces needed for the task.
 Codex invokes an installed skill as `$<plugin>:<skill>`. Start a new task after
 installing or updating so Codex discovers the new namespaces.
 
 ## Claude Code installation
 
-The repository-level `.claude-plugin/marketplace.json` publishes the same four
+The repository-level `.claude-plugin/marketplace.json` publishes the same six
 plugins. Each plugin includes a `.claude-plugin/plugin.json`; Prelude also
 bundles the Claude-native Orca worker agents. Claude Code addresses installed
 skills as `/<plugin>:<skill>`.
 
 ## Project-local harness adapters
 
-`scripts/install-metis.sh` installs any of the four plugins into Codex, Claude
+`scripts/install-metis.sh` installs any of the six plugins into Codex, Claude
 Code, or OpenCode2 project-local discovery paths. It copies complete skill
 directories so supporting scripts, references, assets, and metadata stay with
 the skill:

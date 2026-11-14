@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: llm-serving-allocator-step
+expected_outcome: |
+  The response derives the allocator's cost per step from the given counts (about 3,000 calls x 0.25 us, about
+  0.75 ms per step), notes that the scheduler's CPU work (4.1 ms) overlaps the 38 ms GPU step so the allocator is
+  off the critical path of TTFT, concludes that the lock-free allocator's effect on p99 TTFT is near zero
+  and that it should not be built as the next step, and proposes gathering evidence on what drives p99 TTFT
+  (queueing, prefill, scheduling). It notes the numbers come from one run. step-allocator.md is a step record with
+  a refutation criterion. Nothing from an unrelated project (its goals, engines or datasets) is imposed.

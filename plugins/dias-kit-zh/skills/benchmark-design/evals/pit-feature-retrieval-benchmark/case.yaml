@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: pit-feature-retrieval-benchmark
+expected_outcome: |
+  benchmark-spec.md 是一份完整、可实现的时间点（as-of）特征检索基准规范，比较 DuckDB、Spark 和 DataFusion。它把离线批量测试与在线服务测试分开，给出带种子的数据生成器，其旋钮控制驱动 as-of join 代价的性质（每实体事件数、标签与特征时间戳间隔、实体倾斜、特征表数量、回看窗口），定义扩展规则和规模点，在线侧有带延迟百分位约束的主指标以及成本归一化，运行规则包括预热、冷/热和重复次数，正确性检查对照参考答案，并写明公平性与调优规则、驱动器校准，以及对照 Gray 四条准则的审计，同时写明权衡与局限。

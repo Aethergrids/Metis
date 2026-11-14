@@ -1,0 +1,13 @@
+{
+  "name": "dias-kit",
+  "version": "0.2.0",
+  "description": "Method skills for experimental systems research: first-principles research steps, benchmark design, and quantified writing.",
+  "author": {
+    "name": "Aethergrids",
+    "url": "https://github.com/Aethergrids"
+  },
+  "homepage": "https://github.com/Aethergrids/Metis",
+  "repository": "https://github.com/Aethergrids/Metis",
+  "license": "Apache-2.0",
+  "keywords": ["research", "benchmarks", "systems", "writing"]
+}

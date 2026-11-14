@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: pit-feature-retrieval-benchmark
+expected_outcome: |
+  benchmark-spec.md is a complete, implementable benchmark specification for point-in-time (as-of) feature
+  retrieval across DuckDB, Spark and DataFusion. It separates an offline batch test from an online serving test,
+  gives a seeded data generator whose knobs control the properties that drive as-of join cost (events per entity,
+  label/feature timestamp gaps, entity skew, number of feature tables, lookback window), defines a scaling rule
+  and scale points, a primary metric with a latency percentile constraint for online and cost normalization,
+  run rules (warm-up, cold/warm, repetitions), correctness checks against a reference answer, fairness and tuning
+  rules, driver calibration, and an audit against Gray's four criteria with stated trade-offs and limits.
